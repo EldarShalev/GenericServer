@@ -1,0 +1,4 @@
+/usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /mnt/c/Users/Eldar/CLionProjects/Server
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /mnt/c/Users/Eldar/CLionProjects/Server/cmake-build-debug
