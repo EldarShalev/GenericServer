@@ -14,9 +14,7 @@ using namespace std;
 class ClientHandler {
 
 public:
-
-
-    virtual void handleClient(istream input, ostream output)= 0;
+    virtual void handleClient(istream input, ostream output) = 0;
 };
 
 
