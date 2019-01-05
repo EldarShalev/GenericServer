@@ -8,10 +8,12 @@
 void MyTestClientHandler::handleClient(string problem) {
 
     string reverseString;
-    if (this->cacheManager->isSolutionSavedInCache(problem)) {
-        this->cacheManager->getSolutionFromCache(problem);
+    string parsedProblem = Utils::parseString(problem, false);
+    if (this->cacheManager->isSolutionSavedInCache(parsedProblem)) {
+        this->cacheManager->getSolutionFromCache(parsedProblem);
     } else {
+
         reverseString = this->solver->solve(problem);
-        this->cacheManager->saveSolutionForProblem(problem,reverseString);
+        this->cacheManager->saveSolutionForProblem(parsedProblem, reverseString);
     }
 }

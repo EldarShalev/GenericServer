@@ -7,6 +7,7 @@
 
 #include "Solver.h"
 #include <string>
+#include "Utils.h"
 
 using namespace std;
 

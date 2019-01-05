@@ -4,10 +4,35 @@
 
 #include "MySerialServer.h"
 
-struct my_thread_info {
-    int socket;
+class my_thread_info {
+public:
+    int serverSocket;
+    int clientSocket;
     ClientHandler *clientHandler;
 };
+
+static void *connectionHandler(void *context) {
+    my_thread_info info = *((my_thread_info *) context);
+
+    //Accept and incoming connection
+    puts("Waiting for incoming connections...");
+    char buffer[4096] = {0};
+    while (true) {
+//        listen(info.serverSocket, 5);
+        read(info.clientSocket, buffer, sizeof(buffer));
+
+//        stringstream in;
+//        ostringstream out;
+//        in.read(buffer, sizeof(buffer));
+//        TODO handle streams and client
+        if (buffer[0] != '\0') {
+            info.clientHandler->handleClient(buffer);
+        }
+
+
+    }
+}
+
 
 void MySerialServer::open(int port, ClientHandler *ch) {
     int opt = 1;
@@ -15,13 +40,13 @@ void MySerialServer::open(int port, ClientHandler *ch) {
     int serverDescriptor;
     pthread_t threadId;
 
-    // Creating socket file descriptor
+    // Creating serverSocket file descriptor
     if ((serverDescriptor = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == 0) {
-        perror("socket failed");
+        perror("serverSocket failed");
         exit(EXIT_FAILURE);
     }
 
-    // Forcefully attaching socket to the port 8080
+    // Forcefully attaching serverSocket to the port 8080
     if (setsockopt(serverDescriptor, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))) {
         perror("setsockopt");
         exit(EXIT_FAILURE);
@@ -30,7 +55,7 @@ void MySerialServer::open(int port, ClientHandler *ch) {
     server.sin_addr.s_addr = INADDR_ANY;
     server.sin_port = htons(port);
 
-    // Forcefully attaching socket to the port 8080
+    // Forcefully attaching serverSocket to the port 8080
     if (bind(serverDescriptor, (struct sockaddr *) &server, sizeof(server)) < 0) {
         perror("bind failed");
         exit(EXIT_FAILURE);
@@ -43,39 +68,25 @@ void MySerialServer::open(int port, ClientHandler *ch) {
     //Accept and incoming connection
     cout << ("Waiting for incoming connections...") << endl;
     socklen_t addrlen = sizeof(sockaddr_in);
-
-    if (accept(serverDescriptor, (struct sockaddr *) &client, &addrlen)) {
+    int acceptConnection;
+    if (acceptConnection = accept(serverDescriptor, (struct sockaddr *) &client, &addrlen)) {
         cout << "Connection accepted, starting listener thread" << endl;
     }
 
     my_thread_info info;
-    info.socket = serverDescriptor;
+    info.serverSocket = serverDescriptor;
     info.clientHandler = ch;
+    info.clientSocket = acceptConnection;
 
-    if (pthread_create(&threadId, NULL, connectionHandler, (void *) &info) < 0) {
+    int index = pthread_create(&threadId, NULL, connectionHandler, (void *) &info);
+    if (index < 0) {
         perror("could not create thread");
         exit(EXIT_FAILURE);
     }
+    pthread_join(threadId, NULL);
+
 }
 
-static void *connectionHandler(void *context) {
-    my_thread_info info = *((my_thread_info*)context);
-
-    //Accept and incoming connection
-    puts("Waiting for incoming connections...");
-    char buffer[4096] = {0};
-    while (true) {
-        listen(info.socket, 5);
-        read(info.socket, buffer, sizeof(buffer));
-
-        stringstream in;
-        ostringstream  out;
-        in.read(buffer, sizeof(buffer));
-//        TODO handle streams and client
-        info.clientHandler->handleClient(buffer);
-
-    }
-}
 
 void MySerialServer::stop() {
 }

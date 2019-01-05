@@ -7,5 +7,5 @@
 
 
 string StringReverser::solve(string problem) {
-    std::reverse(problem.begin(), problem.end());
+    return Utils::parseString(problem, true);
 }

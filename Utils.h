@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -14,6 +15,8 @@ class Utils {
 
 public:
     static vector<string> splitToVectorByDelimiter(string str, char delimiter);
+
+    static string parseString(string toReverse, bool reverse);
 };
 
 

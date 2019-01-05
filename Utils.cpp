@@ -15,5 +15,20 @@ vector<string> Utils::splitToVectorByDelimiter(string str, char delimiter) {
             temp = "";
         }
     }
+    resutlt.push_back(temp);
     return resutlt;
+}
+
+string Utils::parseString(string str, bool shouldReverse) {
+    string temp;
+    for (string::iterator it = str.begin(); it != str.end(); ++it) {
+        if (*it == '\n' || *it == '\r' || *it == '\0') {
+            continue;
+        }
+        temp += *it;
+    }
+    if (shouldReverse) {
+        reverse(temp.begin(), temp.end());
+    }
+    return temp;
 }

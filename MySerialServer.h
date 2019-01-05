@@ -23,7 +23,6 @@ class MySerialServer : public Server {
 private:
 
 public:
-    static void *connectionHandler(void *context){}
     MySerialServer(){}
 
     void open(int port, ClientHandler *ch);
