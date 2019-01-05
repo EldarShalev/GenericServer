@@ -14,7 +14,10 @@ using namespace std;
 class ClientHandler {
 
 public:
-    virtual void handleClient(istream input, ostream output) = 0;
+    // TODO - change this part after better understanding of 'instream/outstream'..
+//    virtual void handleClient1(istream input, ostream output) = 0;
+
+    virtual void handleClient(string buffer) = 0;
 };
 
 

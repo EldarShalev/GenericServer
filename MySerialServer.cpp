@@ -72,7 +72,8 @@ static void *connectionHandler(void *context) {
         ostringstream  out;
         in.read(buffer, sizeof(buffer));
 //        TODO handle streams and client
-//        info.clientHandler->handleClient(in, out);
+        info.clientHandler->handleClient(buffer);
+
     }
 }
 

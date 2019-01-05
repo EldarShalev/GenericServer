@@ -11,11 +11,11 @@ class CacheManager {
 
 public:
 
-    virtual bool isSolutionSavedInCache(Solution s, Problem p) = 0;
+    virtual bool isSolutionSavedInCache(Problem p) = 0;
 
-    virtual Solution getSolutionFromCach(Problem problem) = 0;
+    virtual Solution getSolutionFromCache(Problem problem) = 0;
 
-    virtual void saveSolutionForProblem(Solution s, Problem p) = 0;
+    virtual void saveSolutionForProblem(Problem p, Solution s) = 0;
 };
 
 

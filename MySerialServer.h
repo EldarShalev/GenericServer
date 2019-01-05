@@ -13,16 +13,17 @@
 #include <pthread.h>
 #include <iostream>
 #include <stdio.h>
-#include <zconf.h>
 #include <sstream>
+#include <unistd.h>
 
 using namespace server_side;
 using namespace std;
 
 class MySerialServer : public Server {
 private:
-    static void *connectionHandler(void *context);
+
 public:
+    static void *connectionHandler(void *context){}
     MySerialServer(){}
 
     void open(int port, ClientHandler *ch);

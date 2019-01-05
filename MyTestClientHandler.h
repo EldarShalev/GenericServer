@@ -16,7 +16,8 @@ private:
     Solver<std::string,std::string> *solver;
     CacheManager<std::string,std::string> *cacheManager;
 public:
-    void handleClient(istream input, ostream output);
+   // void handleClient(istream input, ostream output);
+    void handleClient(string buffer);
 
 
 };

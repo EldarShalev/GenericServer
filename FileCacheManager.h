@@ -7,19 +7,32 @@
 
 #include <string>
 #include "CacheManager.h"
+#include "unordered_map"
+#include <iostream>
+#include <fstream>
+#include "Utils.h"
+
+const char fileDelimiter = ',';
+
 using namespace std;
 
-class FileCacheManager : public CacheManager<std::string,std::string> {
+class FileCacheManager : public CacheManager<std::string, std::string> {
 
 private:
-    // Consider for o(1) using : std::unordered_map
+    unordered_map<string, string> problemToSolutions;
 public:
 
-    virtual bool isSolutionSavedInCache(string solution , string problem);
+    FileCacheManager();
 
-    virtual string getSolutionFromCach(string problem);
+    bool isSolutionSavedInCache(string problem);
 
-    virtual void saveSolutionForProblem(string solution, string problem);
+    string getSolutionFromCache(string problem);
+
+    void saveSolutionForProblem(string problem, string solution);
+
+    void saveAlsoToFile(string problem, string solution);
+
+    void loadFileToMap();
 };
 
 
