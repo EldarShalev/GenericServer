@@ -1,1 +1,0 @@
-/usr/bin/c++   -g   CMakeFiles/Server.dir/main.cpp.o CMakeFiles/Server.dir/MySerialServer.cpp.o CMakeFiles/Server.dir/MyTestClientHandler.cpp.o CMakeFiles/Server.dir/FileCacheManager.cpp.o CMakeFiles/Server.dir/StringReverser.cpp.o  -o Server 
