@@ -1,0 +1,21 @@
+//
+// Created by Eldar on 1/9/2019.
+//
+
+#ifndef SERVER_SEARCHER_H
+#define SERVER_SEARCHER_H
+
+#include <vector>
+#include "Searchable.h"
+#include "SearcherResult.h"
+
+using namespace std;
+
+template<typename T>
+class Searcher {
+public:
+    virtual SearcherResult search(Searchable<T> searchable);
+
+};
+
+#endif //SERVER_SEARCHER_H

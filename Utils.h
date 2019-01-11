@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 #include <bits/stdc++.h>
+#include "State.h"
+#include "SearcherResult.h"
 
 using namespace std;
 
@@ -17,6 +19,23 @@ public:
     static vector<string> splitToVectorByDelimiter(string str, char delimiter);
 
     static string parseString(string toReverse, bool reverse);
+
+    template<typename T>
+    static SearcherResult getSearcherResult(State<T> state) {
+        State<T> ptr = state.getPrevious();
+        int dist = 0;
+        int cost = state.getCost();
+        while (ptr != NULL) {
+            ++dist;
+            cost += ptr.getCost();
+            ptr = ptr.getPrevious();
+        }
+
+        SearcherResult res;
+        res.distance = dist;
+        res.cost = cost;
+        return res;
+    }
 };
 
 

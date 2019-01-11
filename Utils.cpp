@@ -6,17 +6,17 @@
 
 vector<string> Utils::splitToVectorByDelimiter(string str, char delimiter) {
     string temp = "";
-    vector<string> resutlt;
+    vector<string> result;
     for (string::iterator it = str.begin(); it != str.end(); ++it) {
         if (*it != delimiter) {
             temp += *it;
         } else {
-            resutlt.push_back(temp);
+            result.push_back(temp);
             temp = "";
         }
     }
-    resutlt.push_back(temp);
-    return resutlt;
+    result.push_back(temp);
+    return result;
 }
 
 string Utils::parseString(string str, bool shouldReverse) {

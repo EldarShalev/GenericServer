@@ -12,7 +12,7 @@
 #include <fstream>
 #include "Utils.h"
 
-const char fileDelimiter = ',';
+const char fileDelimiter = '$';
 
 using namespace std;
 
