@@ -15,6 +15,11 @@ private:
     State<T> DFS(map<T, State<T>> data, State<T> start, T dest, map<T, bool> visited) {
         visited[start] = true;
 
+        if(start == NULL) {
+            //dead end
+            return NULL;
+        }
+
         // If we have reached the destination cell,
         // we are done
         if (start.getState() == dest) {
@@ -23,12 +28,13 @@ private:
 
 
         for(map<T, State<T>>::iterator it = data.find(start); it != data.end(); ++it) {
-            if(!visited[it->first]) {
+            if(!visited[it->first] && it->second.getCost() > -1) {
                 State<T> state = DFS(data, it->second, dest, visited);
                 state.setPrevious(start);
                 return state;
             }
         }
+        return NULL;
     }
 public:
     SearcherResult search(Searchable<T> searchable) {

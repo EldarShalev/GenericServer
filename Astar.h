@@ -81,7 +81,7 @@ public:
                 // current successor
                 if (next == dest) {
                     return Utils::getSearcherResult(data[next]);
-                } else if (!closedList[next]) {
+                } else if (!closedList[next]  && data[next].getCost() > -1) {
                     calcLogic(data, data[next], openList);
                 }
             }

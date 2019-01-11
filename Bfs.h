@@ -62,7 +62,7 @@ public:
 
                 // if adjacent cell is valid, has path and
                 // not visited yet, enqueue it.
-                if (!visited[next])
+                if (!visited[next] && data[next].getCost() > -1)
                 {
                     // mark cell as visited and enqueue it
                     visited[next] = true;
