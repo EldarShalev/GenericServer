@@ -17,22 +17,17 @@ static void *connectionHandler(void *context) {
     //Accept and incoming connection
     puts("Waiting for incoming connections...");
     char buffer[4096] = {0};
-    while (true) {
-//        listen(info.serverSocket, 5);
+    bool continueReading = true;
+    while (continueReading) {
         read(info.clientSocket, buffer, sizeof(buffer));
-
-//        stringstream in;
-//        ostringstream out;
-//        in.read(buffer, sizeof(buffer));
-//        TODO handle streams and client
         if (buffer[0] != '\0') {
             info.clientHandler->handleClient(buffer);
+            if ("end" == buffer) {
+                continueReading = false;
+            }
         }
-
-
     }
 }
-
 
 void MySerialServer::open(int port, ClientHandler *ch) {
     int opt = 1;
@@ -84,7 +79,6 @@ void MySerialServer::open(int port, ClientHandler *ch) {
         exit(EXIT_FAILURE);
     }
     pthread_join(threadId, NULL);
-
 }
 
 
