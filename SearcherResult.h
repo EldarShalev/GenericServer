@@ -6,7 +6,7 @@
 #define SERVER_SEARCHERRESULT_H
 class SearcherResult {
 public:
-    double distance;
-    double cost;
+    int distance;
+    int cost;
 };
 #endif //SERVER_SEARCHERRESULT_H

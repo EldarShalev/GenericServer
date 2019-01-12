@@ -49,7 +49,7 @@ public:
                 T next = state->getState();
 
                 // if adjacent state is valid, has path and not visited yet, enqueue it.
-                if (!visited[next] && state->getCost() > -1) {
+                if (!visited[next]) {
                     // mark state as visited and enqueue it
                     visited[next] = true;
                     state->setPrevious(curr);

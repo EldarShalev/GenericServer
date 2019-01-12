@@ -69,7 +69,7 @@ public:
                 // current successor
                 if (next->getState() == goal->getState()) {
                     return Utils::getSearcherResult(next);
-                } else if (!visited[next->getState()]  && next->getCost() > -1) {
+                } else if (!visited[next->getState()]) {
                     calcLogic(next, openList);
                 }
             }

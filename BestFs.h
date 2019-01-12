@@ -40,8 +40,8 @@ public:
             for (int i = 0; i < nextStates.size(); i++) {
                 State<T> *nextState = nextStates[i];
                 T next = nextState->getState();
-                if (visited[next] || nextState->getCost() == -1) {
-                    //we already calculated the best for this one, or we cant go through
+                if (visited[next]) {
+                    //we already calculated the best for this one
                     continue;
                 }
 

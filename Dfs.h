@@ -15,11 +15,6 @@ private:
     State<T> *DFS(Searchable<T> *searchable, State<T> *initial, T dest, map<T, bool> visited) {
         visited[initial->getState()] = true;
 
-        if(initial == NULL || initial->getCost() == -1) {
-            //dead end
-            return NULL;
-        }
-
         // If we have reached the destination,we are done
         if (initial->getState() == dest) {
             return initial;
@@ -29,7 +24,7 @@ private:
 
         for(int i = 0; i < nextStates.size(); ++i) {
             State<T> *next = nextStates[i];
-            if(!visited[next->getState()] && next->getCost() > -1) {
+            if(!visited[next->getState()]) {
                 State<T> *state = DFS(searchable, next, dest, visited);
                 if(state != NULL) {
                     if (state->getPrevious() != NULL) {

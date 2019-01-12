@@ -34,7 +34,7 @@ vector<State<Point>*> Searchable<Point>::getAllPossibleStates(State<Point> *pred
 
     for (int i = 0; i < 4; i++) {
         Point next = pt.calcNext({rowNum[i], colNum[i]});
-        if (allStates.count(next) > 0) {
+        if (allStates.count(next) > 0 && allStates[next]->getCost() != -1) {
             result.push_back(allStates[next]);
         }
     }
