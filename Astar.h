@@ -17,22 +17,22 @@
 template<typename T>
 class Astar : public Searcher<T> {
 private:
-    void calcLogic(State<T> curr, set<State<T>> &openList) {
-        SearcherResult infoPrev = Utils::getSearcherResult(*curr.getPrevious());
-        SearcherResult infoCurr = Utils::getSearcherResult(curr);
-        int fPrev = infoPrev.distance + infoPrev.cost;
-        int fCurr = infoCurr.distance + infoCurr.cost;
+    void calcLogic(State<T> *next, State<T> *curr, set<State<T> *> &openList) {
+        if (next->getPrevious() == NULL) {
+            next->setPrevious(curr);
+            openList.insert(next);
+        } else {
+            SearcherResult infoPrev = Utils::getSearcherResult(*next->getPrevious());
+            State<Point> whatIf(next->getState(), next->getCost());
+            whatIf.setPrevious(curr);
+            SearcherResult infoWhatIf = Utils::getSearcherResult(whatIf);
+            int fPrev = infoPrev.distance + infoPrev.cost;
+            int fWhatIf = infoWhatIf.distance + infoWhatIf.cost;
 
-        // If it isn’t on the open list, add it to
-        // the open list. Make the current square
-        // the parent of this square. Record the
-        // f, g, and h costs of the square cell
-        //                OR
-        // If it is on the open list already, check
-        // to see if this path to that square is better,
-        // using 'f' cost as the measure.
-        if (fPrev >= INT_MAX || fPrev > fCurr) {
-            openList.insert(curr);
+            if (fWhatIf <= fPrev) {
+                next->setPrevious(curr);
+                openList.insert(next);
+            }
         }
     }
 
@@ -47,39 +47,33 @@ public:
         }
 
         map<T, bool> visited;
-        set<State<T>*> openList;
+        set<State<T> *> openList;
 
         openList.insert(initial);
 
         while (!openList.empty()) {
-            State<T> curr = *openList.begin();
+            State<T> *curr = *openList.begin();
 
             // Remove this vertex from the open list
             openList.erase(openList.begin());
 
             // Add this vertex to the closed list
-            visited[curr.getState()] = true;
-            vector<State<T>*> nextStates = searchable->getAllPossibleStates(curr);
+            visited[curr->getState()] = true;
+            vector<State<T> *> nextStates = searchable->getAllPossibleStates(curr);
 
             for (int i = 0; i < nextStates.size(); i++) {
                 State<T> *next = nextStates[i];
-                next->setPrevious(&curr);
 
-                // If the destination cell is the same as the
-                // current successor
-                if (next->getState() == goal->getState()) {
-                    return Utils::getSearcherResult(next);
-                } else if (!visited[next->getState()]) {
-                    calcLogic(next, openList);
+                if (!visited[next->getState()]) {
+                    calcLogic(next, curr, openList);
                 }
             }
         }
 
-        // When the destination cell is not found and the open
-        // list is empty, then we conclude that we failed to
-        // reach the destination cell. This may happen when the
-        // there is no way to destination cell (due to blockages)
-        return {-1, -1};
+        if (goal->getPrevious() == NULL) {
+            return {-1, -1};
+        }
+        return Utils::getSearcherResult(*goal);
     }
 };
 
