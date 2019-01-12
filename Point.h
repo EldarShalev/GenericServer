@@ -22,8 +22,13 @@ public:
         return {x + next.x, y + next.y};
     }
 
+
     friend bool operator<(const Point &l, const Point &r) {
-        return l.x < r.x && l.y < r.y;
+        if (l.x == r.x) {
+            return l.y < r.y;
+        }
+        return l.x < r.x;
+
     }
 
     friend bool operator==(const Point &l, const Point &r) {

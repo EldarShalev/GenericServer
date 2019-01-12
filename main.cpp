@@ -38,8 +38,8 @@ int main(int argc, char *argv[]) {
         Point end = Utils::getPointFromString(point_end);
         vector<vector<int>> intVector = Utils::vecStringToInt(vector1, sizeOfMatix);
         Searchable<Point> *searchable = new SearchableMatrix(sizeOfMatix, start, end, intVector);
-        Bfs<Point> *dfs1 = new Bfs<Point>();
-        Searcher<Point> *searcher = dfs1;
+        Bfs<Point> *bfs = new Bfs<Point>();
+        Searcher<Point> *searcher = bfs;
         Tester<Point> *tester;
         tester->testSearcher(searcher, searchable);
         counter++;

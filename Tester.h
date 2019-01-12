@@ -15,9 +15,7 @@ template<typename T>
 class Tester {
 public:
     void testSearcher(Searcher<T> *searcher, Searchable<T> *searchable) {
-//        Dfs<T> *dfs=new Dfs<T>();
-        SearcherResult sol1=searcher->search(searchable);
-//        SearcherResult solution = searcher->search(searchable);
+        SearcherResult solution = searcher->search(searchable);
     }
 
 };

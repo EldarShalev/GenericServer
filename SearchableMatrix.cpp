@@ -5,7 +5,8 @@
 #include "SearchableMatrix.h"
 
 SearchableMatrix::SearchableMatrix(int size, const Point &start, const Point &dest, const vector<vector<int>> &matrix)
-        : Searchable<Point>(start, dest, matrixToStates(matrix)), size(size), start(&start), dest(&dest), matrix(matrix) {
+        : Searchable<Point>(start, dest, matrixToStates(matrix)), size(size), start(&start), dest(&dest),
+          matrix(matrix) {
 }
 
 map<Point, State<Point>> SearchableMatrix::matrixToStates(const vector<vector<int>> &matrix) {
@@ -14,13 +15,14 @@ map<Point, State<Point>> SearchableMatrix::matrixToStates(const vector<vector<in
         for (int j = 0; j < matrix[i].size(); ++j) {
             Point pt = {i, j};
             State<Point> state(pt, matrix[i][j]);
-            points.insert(pair<Point, State<Point>>(pt, state));
+            pair<Point, State<Point>> p1(pt, state);
+            points.insert(p1);
         }
     }
     return points;
 }
 
-template <>
+template<>
 vector<State<Point>> Searchable<Point>::getAllPossibleStates(State<Point> pred) {
     vector<State<Point>> result;
     // These arrays are used to get row and column
@@ -32,7 +34,9 @@ vector<State<Point>> Searchable<Point>::getAllPossibleStates(State<Point> pred) 
 
     for (int i = 0; i < 4; i++) {
         Point next = pt.calcNext({rowNum[i], colNum[i]});
-        result.push_back(allStates[next]);
+        if (allStates.count(next) > 0) {
+            result.push_back(allStates[next]);
+        }
     }
 
     return result;
