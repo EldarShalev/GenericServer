@@ -52,12 +52,6 @@ public:
         // that no cell has been included yet
         // This closed list is implemented as a boolean 2D array
         map<T, bool> closedList;
-
-        // These arrays are used to get row and column
-        // numbers of 4 neighbours of a given cell
-        int rowNum[] = {-1, 0, 0, 1};
-        int colNum[] = {0, -1, 1, 0};
-
         set<State<T>> openList;
 
         // Put the starting cell on the open list and set its
@@ -65,17 +59,18 @@ public:
         openList.insert(data[start]);
 
         while (!openList.empty()) {
-            State<T> p = *openList.begin();
+            State<T> curr = *openList.begin();
 
             // Remove this vertex from the open list
             openList.erase(openList.begin());
 
             // Add this vertex to the closed list
-            closedList[p] = true;
+            closedList[curr] = true;
+            vector<State<T>> nextStates = searchable.getAllPossibleStates(curr);
 
-            for (int i = 0; i < 4; i++) {
-                T next = p.getState().calcNext({rowNum[i], colNum[i]});
-                data[next].setPrevious(p);
+            for (int i = 0; i < nextStates.size(); i++) {
+                T next = nextStates[i].getState();
+                data[next].setPrevious(curr);
 
                 // If the destination cell is the same as the
                 // current successor

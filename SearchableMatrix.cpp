@@ -10,7 +10,7 @@ SearchableMatrix::SearchableMatrix(int size, const Point &start, const Point &de
 
 map<Point, State<Point>> SearchableMatrix::matrixToStates(const vector<vector<int>> &matrix) {
     map<Point, State<Point>> points;
-    for(int i = 0; i < matrix.size(); ++i) {
+    for (int i = 0; i < matrix.size(); ++i) {
         for (int j = 0; j < matrix[i].size(); ++j) {
             Point pt = {i, j};
             State<Point> state(pt, matrix[i][j]);
@@ -18,4 +18,22 @@ map<Point, State<Point>> SearchableMatrix::matrixToStates(const vector<vector<in
         }
     }
     return points;
+}
+
+template <>
+vector<State<Point>> Searchable<Point>::getAllPossibleStates(State<Point> pred) {
+    vector<State<Point>> result;
+    // These arrays are used to get row and column
+    // numbers of 4 neighbours of a given cell
+    int rowNum[] = {-1, 0, 0, 1};
+    int colNum[] = {0, -1, 1, 0};
+
+    Point pt = pred.getState();
+
+    for (int i = 0; i < 4; i++) {
+        Point next = pt.calcNext({rowNum[i], colNum[i]});
+        result.push_back(allStates[next]);
+    }
+
+    return result;
 }

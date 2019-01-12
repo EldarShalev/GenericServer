@@ -16,11 +16,6 @@ template<typename T>
 class BestFs : public Searcher<T> {
 public:
     SearcherResult search(Searchable<T> searchable) {
-        // These arrays are used to get row and column
-        // numbers of 4 neighbours of a given cell
-        int rowNum[] = {-1, 0, 0, 1};
-        int colNum[] = {0, -1, 1, 0};
-
         map<T, State<T>> data = searchable.getAllPossibleStates();
         State<T> initial = searchable.getInitialState();
         State<T> goal = searchable.getGoalState();
@@ -42,11 +37,13 @@ public:
                 return Utils::getSearcherResult(curr.key);
             }
 
-            for (int i = 0; i < 4; i++) {
-                T next = curr.getState().calcNext({rowNum[i], colNum[i]});
+            vector<State<T>> nextStates = searchable.getAllPossibleStates(curr);
+
+            for (int i = 0; i < nextStates.size(); i++) {
+                T next = nextStates[i].getState();
                 State<T> nextState = data[next];
-                if (visited[next]) {
-                    //we already calculated the best for this one
+                if (visited[next] || nextState.getCost() == -1) {
+                    //we already calculated the best for this one, or we cant go through
                     continue;
                 }
 

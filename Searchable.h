@@ -29,7 +29,7 @@ public:
 
     virtual State<T> getGoalState() { return goalState; }
 
-    virtual map<T, State<T>> getAllPossibleStates() { return allStates; }
+    virtual vector<State<T>> getAllPossibleStates(State<T> pred);
 
 };
 

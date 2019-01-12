@@ -12,24 +12,23 @@
 template<typename T>
 class Dfs : public Searcher<T> {
 private:
-    State<T> DFS(map<T, State<T>> data, State<T> start, T dest, map<T, bool> visited) {
-        visited[start] = true;
+    State<T> DFS(map<T, State<T>> data, State<T> initial, T dest, map<T, bool> visited) {
+        visited[initial] = true;
 
-        if(start == NULL) {
+        if(initial == NULL) {
             //dead end
             return NULL;
         }
 
-        // If we have reached the destination cell,
-        // we are done
-        if (start.getState() == dest) {
-            return start;
+        // If we have reached the destination,we are done
+        if (initial.getState() == dest) {
+            return initial;
         }
 
-        for(typename map<T, State<T>>::iterator it = data.find(start); it != data.end(); ++it) {
+        for(typename map<T, State<T>>::iterator it = data.find(initial); it != data.end(); ++it) {
             if(!visited[it->first] && it->second.getCost() > -1) {
                 State<T> state = DFS(data, it->second, dest, visited);
-                state.setPrevious(start);
+                state.setPrevious(initial);
                 return state;
             }
         }
@@ -38,12 +37,12 @@ private:
 public:
     SearcherResult search(Searchable<T> searchable) {
         map<T, State<T>> data = searchable.getAllPossibleStates();
-        T start = searchable.getInitialState();
+        T initial = searchable.getInitialState();
 
         // Mark all the vertices as not visited
         map<T, bool> visited;
 
-        State<T> state = DFS(data, data[start], searchable.getGoalState(), visited);
+        State<T> state = DFS(data, data[initial], searchable.getGoalState().getState(), visited);
         return Utils::getSearcherResult(state);
     }
 };
