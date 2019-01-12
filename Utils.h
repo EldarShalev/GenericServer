@@ -10,6 +10,7 @@
 #include <bits/stdc++.h>
 #include "State.h"
 #include "SearcherResult.h"
+#include "Point.h"
 
 using namespace std;
 
@@ -19,6 +20,12 @@ public:
     static vector<string> splitToVectorByDelimiter(string str, char delimiter);
 
     static string parseString(string toReverse, bool reverse);
+
+    static Point getPointFromString(string str);
+
+    static vector<vector<int>> vecStringToInt(vector<string> vector1);
+
+    static string splitStringByDelimiterAndIndex(string str, char delimiter, int index);
 
     template<typename T>
     static SearcherResult getSearcherResult(State<T> state) {
