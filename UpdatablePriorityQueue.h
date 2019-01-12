@@ -7,6 +7,7 @@
 
 #include <utility>
 #include <vector>
+#include <map>
 
 namespace better_priority_queue {
     template <typename Key, typename Priority>
@@ -27,7 +28,7 @@ namespace better_priority_queue {
     template <typename Key, typename Priority>
     class UpdatablePriorityQueue {
     protected:
-        std::vector<size_t> id_to_heappos;
+        map<Key, size_t> id_to_heappos;
         std::vector<PriorityQueueNode<Key,Priority>> heap;
 
     public:
@@ -49,7 +50,7 @@ namespace better_priority_queue {
         }
 
         PriorityQueueNode<Key,Priority> pop_value(bool remember_key=true) {
-            if(size() == 0) return PriorityQueueNode<Key, Priority>(-1, Priority());
+            if(size() == 0) return PriorityQueueNode<Key, Priority>(Key(), Priority());
             PriorityQueueNode<Key,Priority> ret = std::move(*heap.begin());
             id_to_heappos[ret.key] = -1-remember_key;
             if(size() > 1)
@@ -63,7 +64,7 @@ namespace better_priority_queue {
          *  Returns true if the priority was changed.
          * */
         bool set(const Key& key, const Priority& priority, bool only_if_higher=false) {
-            if(key < id_to_heappos.size() && id_to_heappos[key] >= 0) // This key is already in the pQ
+            if(id_to_heappos[key] < id_to_heappos.size() && id_to_heappos[key] >= 0) // This key is already in the pQ
                 return update(key, priority, only_if_higher);
             else
                 return push(key, priority, only_if_higher);
@@ -83,7 +84,6 @@ namespace better_priority_queue {
          *  If the key was remembered and only_if_unknown is true, does nothing and returns false
          * */
         bool push(const Key& key, const Priority& priority, bool only_if_unknown=false) {
-            extend_ids(key);
             if(id_to_heappos[key] < ((size_t)-2)) return false;
             if(only_if_unknown && id_to_heappos[key] == ((size_t)-2)) return false;
             // otherwise we have id_to_heappos[key] = -1, unseen key
@@ -96,7 +96,6 @@ namespace better_priority_queue {
 
         /** Returns true if the key was already inside and was updated, otherwise does nothing and returns false */
         bool update(const Key& key, const Priority& new_priority, bool only_if_higher=false) {
-            if(key >= id_to_heappos.size()) return false;
             size_t heappos = id_to_heappos[key];
             if(heappos >= ((size_t)-2)) return false;
             Priority& priority = heap[heappos].priority;
@@ -114,12 +113,6 @@ namespace better_priority_queue {
         }
 
     private:
-        void extend_ids(Key k) {
-            size_t new_size = k+1;
-            if(id_to_heappos.size() < new_size)
-                id_to_heappos.resize(new_size, -1);
-        }
-
         void sift_down(size_t heappos) {
             size_t len = heap.size();
             size_t child = heappos*2+1;

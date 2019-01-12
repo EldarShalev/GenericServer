@@ -30,6 +30,10 @@ public:
     void setPrevious(State<T> *state) { this->cameFrom = state; }
 
     T getState() { return state; }
+
+    friend bool operator<(const State<T>  l, const State<T>  r) {
+        return l.state < r.state;
+    }
 };
 
 
