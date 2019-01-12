@@ -38,28 +38,26 @@ private:
                         whatIf.setPrevious(initial);
                         int now = Utils::getSearcherResult(whatIf).distance;
                         if (prev <= now) {
-                            //is not shorter
+                            //now is not shorter
                             continue;
                         }
                     }
                     //ignore dead ends
                     state->setPrevious(initial);
-                    return state;
                 }
             }
         }
-        return NULL;
+        return initial;
     }
 
 public:
     SearcherResult search(Searchable<T> *searchable) {
         State<T> *initial = searchable->getInitialState();
-
-        // Mark all the vertices as not visited
         map<T, bool> visited;
 
         State<T> *state = DFS(searchable, initial, searchable->getGoalState()->getState(), visited);
-        return Utils::getSearcherResult(*state);
+        State<T> *goal = searchable->getGoalState();
+        return Utils::getSearcherResult(*goal);
     }
 };
 
