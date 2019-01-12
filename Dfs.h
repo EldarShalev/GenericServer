@@ -25,13 +25,23 @@ private:
             return initial;
         }
 
-        vector<State<T>> nextStates = searchable->getAllPossibleStates(*initial);
+        vector<State<T>*> nextStates = searchable->getAllPossibleStates(initial);
 
         for(int i = 0; i < nextStates.size(); ++i) {
-            State<T> next = nextStates[i];
-            if(!visited[next.getState()] && next.getCost() > -1) {
-                State<T> *state = DFS(searchable, &next, dest, visited);
+            State<T> *next = nextStates[i];
+            if(!visited[next->getState()] && next->getCost() > -1) {
+                State<T> *state = DFS(searchable, next, dest, visited);
                 if(state != NULL) {
+                    if (state->getPrevious() != NULL) {
+                        int prev = Utils::getSearcherResult(*state).distance;
+                        State<T> whatIf(state->getState(), state->getCost());
+                        whatIf.setPrevious(initial);
+                        int now = Utils::getSearcherResult(whatIf).distance;
+                        if (prev <= now) {
+                            //is not shorter
+                            continue;
+                        }
+                    }
                     //ignore dead ends
                     state->setPrevious(initial);
                     return state;
@@ -43,12 +53,12 @@ private:
 
 public:
     SearcherResult search(Searchable<T> *searchable) {
-        State<T> initial = searchable->getInitialState();
+        State<T> *initial = searchable->getInitialState();
 
         // Mark all the vertices as not visited
         map<T, bool> visited;
 
-        State<T> *state = DFS(searchable, &initial, searchable->getGoalState().getState(), visited);
+        State<T> *state = DFS(searchable, initial, searchable->getGoalState()->getState(), visited);
         return Utils::getSearcherResult(*state);
     }
 };

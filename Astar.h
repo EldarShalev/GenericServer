@@ -38,18 +38,18 @@ private:
 
 public:
     SearcherResult search(Searchable<T> *searchable) {
-        State<T> start = searchable->getInitialState();
-        State<T> dest = searchable->getGoalState();
+        State<T> *initial = searchable->getInitialState();
+        State<T> *goal = searchable->getGoalState();
 
         // If the destination cell is the same as source cell
-        if (start.getState() == dest.getState()) {
-            return Utils::getSearcherResult(start);
+        if (initial->getState() == goal->getState()) {
+            return Utils::getSearcherResult(*initial);
         }
 
         map<T, bool> visited;
-        set<State<T>> openList;
+        set<State<T>*> openList;
 
-        openList.insert(start);
+        openList.insert(initial);
 
         while (!openList.empty()) {
             State<T> curr = *openList.begin();
@@ -59,17 +59,17 @@ public:
 
             // Add this vertex to the closed list
             visited[curr.getState()] = true;
-            vector<State<T>> nextStates = searchable->getAllPossibleStates(curr);
+            vector<State<T>*> nextStates = searchable->getAllPossibleStates(curr);
 
             for (int i = 0; i < nextStates.size(); i++) {
-                State<T> next = nextStates[i];
-                next.setPrevious(&curr);
+                State<T> *next = nextStates[i];
+                next->setPrevious(&curr);
 
                 // If the destination cell is the same as the
                 // current successor
-                if (next.getState() == dest.getState()) {
+                if (next->getState() == goal->getState()) {
                     return Utils::getSearcherResult(next);
-                } else if (!visited[next.getState()]  && next.getCost() > -1) {
+                } else if (!visited[next->getState()]  && next->getCost() > -1) {
                     calcLogic(next, openList);
                 }
             }

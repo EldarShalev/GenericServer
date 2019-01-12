@@ -16,42 +16,42 @@ template<typename T>
 class BestFs : public Searcher<T> {
 public:
     SearcherResult search(Searchable<T> *searchable) {
-        State<T> initial = searchable->getInitialState();
-        State<T> goal = searchable->getGoalState();
+        State<T> *initial = searchable->getInitialState();
+        State<T> *goal = searchable->getGoalState();
 
         // Create a priority queue
         UpdatablePriorityQueue<State<T>, int> open;
         map<T, bool> visited;
-        visited[initial.getState()] = true;
+        visited[initial->getState()] = true;
         // Enqueue initial state
-        open.push(initial, initial.getCost());
+        open.push(initial, initial->getCost());
 
         while (!open.empty()) {
             PriorityQueueNode<State<T>, int> curr = open.pop_value();
             visited[curr.key.getState()] = true;
 
             // If we have reached the goal state, we are done
-            if (curr.key.getState() == goal.getState()) {
+            if (curr.key.getState() == goal->getState()) {
                 return Utils::getSearcherResult(curr.key);
             }
 
-            vector<State<T>> nextStates = searchable->getAllPossibleStates(curr.key);
+            vector<State<T>*> nextStates = searchable->getAllPossibleStates(curr.key);
 
             for (int i = 0; i < nextStates.size(); i++) {
-                State<T> nextState = nextStates[i];
-                T next = nextState.getState();
-                if (visited[next] || nextState.getCost() == -1) {
+                State<T> *nextState = nextStates[i];
+                T next = nextState->getState();
+                if (visited[next] || nextState->getCost() == -1) {
                     //we already calculated the best for this one, or we cant go through
                     continue;
                 }
 
-                State<T> whatIfState(nextState.getState(), nextState.getCost());
+                State<T> whatIfState(nextState->getState(), nextState->getCost());
                 whatIfState.setPrevious(&curr.key);
                 SearcherResult whatIfRes = Utils::getSearcherResult(whatIfState);
 
                 // if the new path is better then existing (costs less)
                 if (whatIfRes.cost < curr.priority) {
-                    nextState.setPrevious(&curr.key);
+                    nextState->setPrevious(&curr.key);
                     open.set(nextState, whatIfRes.cost);
                 }
             }

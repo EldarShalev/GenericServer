@@ -15,22 +15,22 @@ using namespace std;
 template<typename T>
 class Searchable {
 protected:
-    State<T> initialState;
-    State<T> goalState;
-    map<T, State<T>> allStates;
+    State<T> *initialState;
+    State<T> *goalState;
+    map<T, State<T>*> allStates;
 
 public:
-    Searchable(T initial, T goal, map<T, State<T>> all) {
-        initialState = initial;
-        goalState = goal;
+    Searchable(T initial, T goal, map<T, State<T>*> all) {
+        initialState = all[initial];
+        goalState = all[goal];
         allStates = all;
     }
 
-    virtual State<T> getInitialState() { return initialState; }
+    virtual State<T> *getInitialState() { return initialState; }
 
-    virtual State<T> getGoalState() { return goalState; }
+    virtual State<T> *getGoalState() { return goalState; }
 
-    virtual vector<State<T>> getAllPossibleStates(State<T> pred);
+    virtual vector<State<T>*> getAllPossibleStates(State<T> *pred);
 
 };
 
