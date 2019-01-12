@@ -5,6 +5,11 @@
 #include "StringReverser.h"
 #include "SearchableMatrix.h"
 #include "Point.h"
+#include "Bfs.h"
+#include "Dfs.h"
+#include "Astar.h"
+#include "BestFs.h"
+#include "Tester.h"
 
 int main(int argc, char *argv[]) {
 
@@ -33,13 +38,17 @@ int main(int argc, char *argv[]) {
         Point end = Utils::getPointFromString(point_end);
         vector<vector<int>> intVector = Utils::vecStringToInt(vector1, sizeOfMatix);
         Searchable<Point> *searchable = new SearchableMatrix(sizeOfMatix, start, end, intVector);
+        Bfs<Point> *dfs1 = new Bfs<Point>();
+        Searcher<Point> *searcher = dfs1;
+        Tester<Point> *tester;
+        tester->testSearcher(searcher, searchable);
         counter++;
     }
-    Solver<string, string> *solver = new StringReverser();
-    CacheManager<string, string> *cacheManager = new FileCacheManager();
-    MySerialServer *mySerialServer = new MySerialServer();
-    ClientHandler *clientHandler = new MyTestClientHandler(solver, cacheManager);
-    mySerialServer->open(stoi(argv[1]), clientHandler);
+//    Solver<string, string> *solver = new StringReverser();
+//    CacheManager<string, string> *cacheManager = new FileCacheManager();
+//    MySerialServer *mySerialServer = new MySerialServer();
+//    ClientHandler *clientHandler = new MyTestClientHandler(solver, cacheManager);
+//    mySerialServer->open(stoi(argv[1]), clientHandler);
 
     return 0;
 }

@@ -54,6 +54,7 @@ vector<vector<int>> Utils::vecStringToInt(vector<string> vector1, int matrixSize
         vic1.push_back(temp);
         temp.clear();
     }
+    return vic1;
 }
 
 string Utils::splitStringByDelimiterAndIndex(string str, char delimiter, int index) {

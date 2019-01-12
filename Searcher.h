@@ -14,7 +14,7 @@ using namespace std;
 template<typename T>
 class Searcher {
 public:
-    virtual SearcherResult search(Searchable<T> searchable);
+    virtual SearcherResult search(Searchable<T> *searchable) = 0;
 
 };
 

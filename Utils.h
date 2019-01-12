@@ -29,13 +29,13 @@ public:
 
     template<typename T>
     static SearcherResult getSearcherResult(State<T> state) {
-        State<T> ptr = state.getPrevious();
+        State<T> *ptr = state.getPrevious();
         int dist = 0;
         int cost = state.getCost();
         while (ptr != NULL) {
             ++dist;
-            cost += ptr.getCost();
-            ptr = ptr.getPrevious();
+            cost += ptr->getCost();
+            ptr = ptr->getPrevious();
         }
 
         SearcherResult res;
