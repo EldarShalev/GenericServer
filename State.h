@@ -9,21 +9,21 @@ template<typename T>
 class State {
 private:
     T state;
-    double cost;
+    int cost;
     State<T> *cameFrom = NULL;
 public:
     State() {}
 
     State(T state) { setState(state); }
 
-    State(T state, double cost) {
+    State(T state, int cost) {
         setState(state);
         this->cost = cost;
     }
 
     void setState(T state) { this->state = state; }
 
-    double getCost() { return cost; }
+    int getCost() { return cost; }
 
     State<T> *getPrevious() { return cameFrom; }
 

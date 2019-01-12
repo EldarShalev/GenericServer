@@ -11,6 +11,7 @@ public:
     int x;
     int y;
 
+    Point() {}
 
     Point(int first, int second) {
         x = first;
