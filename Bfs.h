@@ -35,8 +35,8 @@ public:
             State<T> curr = open.front();
 
             // If we have reached the goal state, we are done
-            if (curr.getState() == goal->getState()) {
-                return Utils::getSearcherResult(curr);
+            if (curr->getState() == goal->getState()) {
+                return Utils::getSearcherResult(*curr);
             }
 
             // Otherwise dequeue the state in the queue and enqueue its adjacent states
@@ -52,7 +52,7 @@ public:
                 if (!visited[next] && state->getCost() > -1) {
                     // mark state as visited and enqueue it
                     visited[next] = true;
-                    state->setPrevious(&curr);
+                    state->setPrevious(curr);
                     open.push(state);
                 }
             }
