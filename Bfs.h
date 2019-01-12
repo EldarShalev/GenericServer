@@ -18,62 +18,51 @@ template<typename T>
 class Bfs : public Searcher<T> {
 public:
     SearcherResult search(Searchable<T> searchable) {
-        SearcherResult res = {-1, -1};
         // These arrays are used to get row and column
         // numbers of 4 neighbours of a given cell
         int rowNum[] = {-1, 0, 0, 1};
         int colNum[] = {0, -1, 1, 0};
 
-        //we currently support only n*n sized matrix
         map<T, State<T>> data = searchable.getAllPossibleStates();
-        int m = data.size();
-        int n = m;
-        State<T> start = searchable.getInitialState();
-        State<T> dest = searchable.getGoalState();
+        State<T> initial = searchable.getInitialState();
+        State<T> goal = searchable.getGoalState();
 
         // Mark all the vertices as not visited
         map<T, bool> visited;
-        visited[start] = true;
+        visited[initial] = true;
 
-        // Create a queue for BFS
-        queue<State<T>> q;
+        // Create a queue
+        queue<State<T>> open;
+        // Enqueue initial state
+        open.push(data[initial]);
 
-        // Distance of source cell is 0
-        q.push(data[start]);  // Enqueue source cell
+        // Do a BFS starting from initial state
+        while (!open.empty()) {
+            State<T> curr = open.front();
 
-        // Do a BFS starting from source cell
-        while (!q.empty())
-        {
-            State<T> curr = q.front();
-
-            // If we have reached the destination cell,
-            // we are done
-            if (curr.getState() == dest.getState()) {
+            // If we have reached the goal state, we are done
+            if (curr.getState() == goal.getState()) {
                 return Utils::getSearcherResult(curr);
             }
 
-            // Otherwise dequeue the front cell in the queue
-            // and enqueue its adjacent cells
-            q.pop();
+            // Otherwise dequeue the state in the queue and enqueue its adjacent states
+            open.pop();
 
-            for (int i = 0; i < 4; i++)
-            {
+            for (int i = 0; i < 4; i++) {
                 T next = curr.getState().calcNext({rowNum[i], colNum[i]});
 
-                // if adjacent cell is valid, has path and
-                // not visited yet, enqueue it.
-                if (!visited[next] && data[next].getCost() > -1)
-                {
-                    // mark cell as visited and enqueue it
+                // if adjacent state is valid, has path and not visited yet, enqueue it.
+                if (!visited[next] && data[next].getCost() > -1) {
+                    // mark state as visited and enqueue it
                     visited[next] = true;
                     data[next].setPrevious(curr);
-                    q.push(data[next]);
+                    open.push(data[next]);
                 }
             }
         }
 
         // Return -1 if destination cannot be reached
-        return res;
+        return {-1, -1};
     }
 };
 

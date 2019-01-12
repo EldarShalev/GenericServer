@@ -26,8 +26,7 @@ private:
             return start;
         }
 
-
-        for(map<T, State<T>>::iterator it = data.find(start); it != data.end(); ++it) {
+        for(typename map<T, State<T>>::iterator it = data.find(start); it != data.end(); ++it) {
             if(!visited[it->first] && it->second.getCost() > -1) {
                 State<T> state = DFS(data, it->second, dest, visited);
                 state.setPrevious(start);
