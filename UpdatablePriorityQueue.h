@@ -10,14 +10,14 @@
 
 namespace better_priority_queue {
     template <typename Key, typename Priority>
-    struct priorityQueueNode {
+    struct PriorityQueueNode {
         Priority priority;
         Key key;
-        priorityQueueNode(const Key& key, const Priority& priority) : priority(priority), key(key) {}
-        friend bool operator<(const priorityQueueNode& pqn1, const priorityQueueNode& pqn2) {
+        PriorityQueueNode(const Key& key, const Priority& priority) : priority(priority), key(key) {}
+        friend bool operator<(const PriorityQueueNode& pqn1, const PriorityQueueNode& pqn2) {
             return pqn1.priority < pqn2.priority;
         }
-        friend bool operator>(const priorityQueueNode& pqn1, const priorityQueueNode& pqn2) {
+        friend bool operator>(const PriorityQueueNode& pqn1, const PriorityQueueNode& pqn2) {
             return pqn1.priority > pqn2.priority;
         }
     };
@@ -28,16 +28,16 @@ namespace better_priority_queue {
     class UpdatablePriorityQueue {
     protected:
         std::vector<size_t> id_to_heappos;
-        std::vector<priorityQueueNode<Key,Priority>> heap;
+        std::vector<PriorityQueueNode<Key,Priority>> heap;
 
     public:
-        UpdatablePriorityQueue() {}
+        UpdatablePriorityQueue() = default;
 
         bool empty()       const { return heap.empty(); }
         std::size_t size() const { return heap.size(); }
 
         /** first is priority, second is key */
-        const priorityQueueNode<Key,Priority>& top() const { return heap.front(); }
+        const PriorityQueueNode<Key,Priority>& top() const { return heap.front(); }
 
         void pop(bool remember_pop=false) {
             if(size() == 0) return;
@@ -48,9 +48,9 @@ namespace better_priority_queue {
             sift_down(0);
         }
 
-        priorityQueueNode<Key,Priority> pop_value(bool remember_key=true) {
-            if(size() == 0) return priorityQueueNode<Key, Priority>(-1, Priority());
-            priorityQueueNode<Key,Priority> ret = std::move(*heap.begin());
+        PriorityQueueNode<Key,Priority> pop_value(bool remember_key=true) {
+            if(size() == 0) return PriorityQueueNode<Key, Priority>(-1, Priority());
+            PriorityQueueNode<Key,Priority> ret = std::move(*heap.begin());
             id_to_heappos[ret.key] = -1-remember_key;
             if(size() > 1)
                 *heap.begin() = std::move(*(heap.end()-1));
@@ -127,7 +127,7 @@ namespace better_priority_queue {
             if(child+1 < len && heap[child+1] > heap[child]) ++child; // Check whether second child is higher
             if(!(heap[child] > heap[heappos])) return; // Already in heap order
 
-            priorityQueueNode<Key,Priority> val = std::move(heap[heappos]);
+            PriorityQueueNode<Key,Priority> val = std::move(heap[heappos]);
             do {
                 heap[heappos] = std::move(heap[child]);
                 id_to_heappos[heap[heappos].key] = heappos;
@@ -145,7 +145,7 @@ namespace better_priority_queue {
             if(len < 2 || heappos <= 0) return;
             size_t parent = (heappos-1)/2;
             if(!(heap[heappos] > heap[parent])) return;
-            priorityQueueNode<Key, Priority> val = std::move(heap[heappos]);
+            PriorityQueueNode<Key, Priority> val = std::move(heap[heappos]);
             do {
                 heap[heappos] = std::move(heap[parent]);
                 id_to_heappos[heap[heappos].key] = heappos;

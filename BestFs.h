@@ -25,49 +25,43 @@ public:
         State<T> initial = searchable.getInitialState();
         State<T> goal = searchable.getGoalState();
 
-        // Create a queue
-        UpdatablePriorityQueue<double, State<T>> open;
-        set<State<T>> closed;
+        // Create a priority queue
+        UpdatablePriorityQueue<State<T>, double> open;
+
+        map<T, bool> visited;
+        visited[initial] = true;
         // Enqueue initial state
-        open.push(data[initial].getCost(), data[initial]);
+        open.push(data[initial], data[initial].getCost());
 
         while (!open.empty()) {
-            State<T> curr = open.front();
-            open.pop();
-            closed.insert(curr);
+            PriorityQueueNode<State<T>, double> curr = open.pop_value();
+            visited[curr.key] = true;
 
             // If we have reached the goal state, we are done
-            if (curr.getState() == goal.getState()) {
-                return Utils::getSearcherResult(curr);
+            if (curr.key.getState() == goal.getState()) {
+                return Utils::getSearcherResult(curr.key);
             }
 
             for (int i = 0; i < 4; i++) {
                 T next = curr.getState().calcNext({rowNum[i], colNum[i]});
                 State<T> nextState = data[next];
-                typename priority_queue<State<T>>::iterator itq = open.find(nextState);
-                typename set<State<T>>::iterator its = closed.find(nextState);
-                if(itq == open.end() && its == closed.end()) {
-                    nextState.setPrevious(curr);
-                    SearcherResult nextRes = Utils::getSearcherResult(nextState);
-                    open.push(nextRes.cost, nextState);
+                if (visited[next]) {
+                    //we already calculated the best for this one
+                    continue;
                 }
-                else {
-                    State<T> whatIfState(nextState.getState(), nextState.getCost());
-                    whatIfState.setPrevious(curr);
-                    SearcherResult nextRes = Utils::getSearcherResult(nextState);
-                    SearcherResult whatIfRes = Utils::getSearcherResult(whatIfState);
-                    // if the new path is better then existing (costs less)
-                    if(whatIfRes.cost < nextRes.cost) {
-                        nextState.setPrevious(curr);
-                        if (itq != open.end()) {
-                            open.update(whatIfRes.cost, nextState);
-                        } else {
-                            open.push_back(whatIfRes.cost, nextState);
-                        }
-                    }
+
+                State<T> whatIfState(nextState.getState(), nextState.getCost());
+                whatIfState.setPrevious(curr.key);
+                SearcherResult whatIfRes = Utils::getSearcherResult(whatIfState);
+
+                // if the new path is better then existing (costs less)
+                if (whatIfRes.cost < curr.priority) {
+                    nextState.setPrevious(curr);
+                    open.set(nextState, whatIfRes.cost);
                 }
             }
         }
+        //did not reach goal
         return {-1, -1};
     }
 };
