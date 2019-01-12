@@ -12,8 +12,8 @@
 class SearchableMatrix : public virtual Searchable<Point> {
 private:
     int size;
-    Point start;
-    Point dest;
+    const Point* start;
+    const Point* dest;
     vector<vector<int>> matrix;
     map<Point, State<Point>> matrixToStates(const vector<vector<int>> &matrix);
 public:
