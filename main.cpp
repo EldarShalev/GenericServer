@@ -23,13 +23,17 @@ int main(int argc, char *argv[]) {
             if (line == "end") {
                 break;
             }
+            if (line == "") {
+                continue;
+            }
             vector1.push_back(line);
             index++;
         }
         Point start = Utils::getPointFromString(point_start);
         Point end = Utils::getPointFromString(point_end);
-        vector<vector<int>> intVector = Utils::vecStringToInt(vector1);
+        vector<vector<int>> intVector = Utils::vecStringToInt(vector1, sizeOfMatix);
         Searchable<Point> *searchable = new SearchableMatrix(sizeOfMatix, start, end, intVector);
+        counter++;
     }
     Solver<string, string> *solver = new StringReverser();
     CacheManager<string, string> *cacheManager = new FileCacheManager();

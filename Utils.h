@@ -23,7 +23,7 @@ public:
 
     static Point getPointFromString(string str);
 
-    static vector<vector<int>> vecStringToInt(vector<string> vector1);
+    static vector<vector<int>> vecStringToInt(vector<string> vector1, int matrixSize);
 
     static string splitStringByDelimiterAndIndex(string str, char delimiter, int index);
 

@@ -40,10 +40,20 @@ Point Utils::getPointFromString(string str) {
     return p1;
 }
 
-vector<vector<int>> Utils::vecStringToInt(vector<string> vector1) {
+vector<vector<int>> Utils::vecStringToInt(vector<string> vector1, int matrixSize) {
     vector<vector<int>> vic1;
+    vector<int> temp;
+    int row = 0;
+    int col = 0;
+    for (vector<string>::iterator it = vector1.begin(); it != vector1.end(); ++it) {
+        for (int i = 0; i < matrixSize; i++) {
+            int num = stoi(splitStringByDelimiterAndIndex(*it, ',', i + 1));
+            temp.push_back(num);
+        }
 
-
+        vic1.push_back(temp);
+        temp.clear();
+    }
 }
 
 string Utils::splitStringByDelimiterAndIndex(string str, char delimiter, int index) {
@@ -52,6 +62,8 @@ string Utils::splitStringByDelimiterAndIndex(string str, char delimiter, int ind
     for (std::string::iterator it = str.begin(); it != str.end(); ++it) {
         if (*it != delimiter) {
             temp += *it;
+        } else if (*it == ' ') {
+            continue;
         } else if (counter == index - 1) {
             return temp;
         } else {
@@ -59,4 +71,5 @@ string Utils::splitStringByDelimiterAndIndex(string str, char delimiter, int ind
             temp = "";
         }
     }
+    return temp;
 }
