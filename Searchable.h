@@ -6,6 +6,7 @@
 #define SERVER_SEARCHABLE_H
 
 #include <map>
+#include <vector>
 #include "State.h"
 #include "Point.h"
 
