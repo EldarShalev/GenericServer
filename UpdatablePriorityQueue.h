@@ -84,14 +84,14 @@ namespace better_priority_queue {
          *  If the key was remembered and only_if_unknown is true, does nothing and returns false
          * */
         bool push(const Key& key, const Priority& priority, bool only_if_unknown=false) {
-            if(id_to_heappos[key] < ((size_t)-2)) return false;
-            if(only_if_unknown && id_to_heappos[key] == ((size_t)-2)) return false;
-            // otherwise we have id_to_heappos[key] = -1, unseen key
-            size_t n = heap.size();
-            id_to_heappos[key] = n; // For consistency in the case where nothing moves (early return)
-            heap.emplace_back(key,priority);
-            sift_up(n);
-            return true;
+            if(!only_if_unknown || id_to_heappos.find(key) == id_to_heappos.end()) {
+                size_t n = heap.size();
+                id_to_heappos[key] = n; // For consistency in the case where nothing moves (early return)
+                heap.emplace_back(key, priority);
+                sift_up(n);
+                return true;
+            }
+            return false;
         }
 
         /** Returns true if the key was already inside and was updated, otherwise does nothing and returns false */

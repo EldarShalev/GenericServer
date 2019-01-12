@@ -20,44 +20,39 @@ public:
         State<T> *goal = searchable->getGoalState();
 
         // Create a priority queue
-        UpdatablePriorityQueue<State<T>*, int> open;
-        map<T, bool> visited;
-        visited[initial->getState()] = true;
+        UpdatablePriorityQueue<State<T> *, int> open;
+        map<T, int> visited;
+        visited[initial->getState()] = initial->getCost();
         // Enqueue initial state
-        open.push(initial, initial->getCost());
+        open.push(initial, initial->getCost(), true);
 
         while (!open.empty()) {
-            PriorityQueueNode<State<T>*, int> *curr = open.pop_value();
-            visited[curr->key.getState()] = true;
+            PriorityQueueNode<State<T> *, int> curr = open.pop_value();
 
-            // If we have reached the goal state, we are done
-            if (curr->key.getState() == goal->getState()) {
-                return Utils::getSearcherResult(curr->key);
-            }
-
-            vector<State<T>*> nextStates = searchable->getAllPossibleStates(curr->key);
+            vector<State<T> *> nextStates = searchable->getAllPossibleStates(curr.key);
 
             for (int i = 0; i < nextStates.size(); i++) {
                 State<T> *nextState = nextStates[i];
                 T next = nextState->getState();
-                if (visited[next]) {
-                    //we already calculated the best for this one
-                    continue;
-                }
 
-                State<T> whatIfState(nextState->getState(), nextState->getCost());
-                whatIfState.setPrevious(curr->key);
-                SearcherResult *whatIfRes = Utils::getSearcherResult(whatIfState);
-
-                // if the new path is better then existing (costs less)
-                if (whatIfRes->cost < curr->priority) {
-                    nextState->setPrevious(curr->key);
-                    open.set(nextState, whatIfRes->cost);
+                if (nextState->getPrevious() == NULL && visited.find(next) == visited.end()) {
+                    nextState->setPrevious(curr.key);
+                    visited[next] = curr.priority + nextState->getCost();
+                    open.push(nextState, visited[next], true);
+                } else {
+                    if (curr.priority + nextState->getCost() < visited[next]) {
+                        nextState->setPrevious(curr.key);
+                        visited[next] = curr.priority + nextState->getCost();
+                        open.update(nextState, visited[next]);
+                    }
                 }
             }
         }
-        //did not reach goal
-        return {-1, -1};
+
+        if (goal->getPrevious() == NULL) {
+            return {-1, -1};
+        }
+        return Utils::getSearcherResult(*goal);
     }
 };
 
