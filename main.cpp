@@ -10,6 +10,7 @@
 #include "Astar.h"
 #include "BestFs.h"
 #include "Tester.h"
+#include "MyParallelServer.h"
 
 int main(int argc, char *argv[]) {
 
@@ -38,17 +39,17 @@ int main(int argc, char *argv[]) {
         Point end = Utils::getPointFromString(point_end);
         vector<vector<int>> intVector = Utils::vecStringToInt(vector1, sizeOfMatix);
         Searchable<Point> *searchable = new SearchableMatrix(sizeOfMatix, start, end, intVector);
-        Bfs<Point> *bfs = new Bfs<Point>();
-        Searcher<Point> *searcher = bfs;
+        Dfs<Point> *dfs = new Dfs<Point>();
+        Searcher<Point> *searcher = dfs;
         Tester<Point> *tester;
         tester->testSearcher(searcher, searchable);
         counter++;
     }
-//    Solver<string, string> *solver = new StringReverser();
-//    CacheManager<string, string> *cacheManager = new FileCacheManager();
-//    MySerialServer *mySerialServer = new MySerialServer();
-//    ClientHandler *clientHandler = new MyTestClientHandler(solver, cacheManager);
-//    mySerialServer->open(stoi(argv[1]), clientHandler);
+    Solver<string, string> *solver = new StringReverser();
+    CacheManager<string, string> *cacheManager = new FileCacheManager();
+    Server *parallelServer = new MyParallelServer();
+    ClientHandler *clientHandler = new MyTestClientHandler(solver, cacheManager);
+    parallelServer->open(stoi(argv[1]), clientHandler);
 
     return 0;
 }

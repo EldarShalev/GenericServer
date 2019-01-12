@@ -10,6 +10,7 @@
 #include "CacheManager.h"
 #include "Utils.h"
 #include <string>
+
 using namespace std;
 
 class MyTestClientHandler : public ClientHandler {
@@ -18,8 +19,6 @@ private:
     Solver<string, string> *solver;
     CacheManager<string, string> *cacheManager;
 public:
-    // void handleClient(istream input, ostream output);
-
     MyTestClientHandler(Solver<string, string> *solver1, CacheManager<string, string> *cacheManager1) {
         this->solver = solver1;
         this->cacheManager = cacheManager1;

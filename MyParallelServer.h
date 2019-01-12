@@ -1,9 +1,9 @@
 //
-// Created by Eldar on 03-Jan-19.
+// Created by Eldar on 12-Jan-19.
 //
 
-#ifndef SERVER_MYSERIALSERVER_H
-#define SERVER_MYSERIALSERVER_H
+#ifndef SERVER_MYPARALLELSERVER_H
+#define SERVER_MYPARALLELSERVER_H
 
 #include "Server.h"
 
@@ -15,14 +15,12 @@
 #include <stdio.h>
 #include <sstream>
 #include <unistd.h>
-
 using namespace server_side;
 using namespace std;
 
-class MySerialServer : public Server {
-
+class MyParallelServer : public Server {
 public:
-    MySerialServer() {}
+    MyParallelServer() {}
 
     void open(int port, ClientHandler *ch);
 
@@ -32,4 +30,4 @@ public:
 };
 
 
-#endif //SERVER_MYSERIALSERVER_H
+#endif //SERVER_MYPARALLELSERVER_H
