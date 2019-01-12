@@ -26,13 +26,13 @@ public:
         visited[initial->getState()] = true;
 
         // Create a queue
-        queue<State<T>> open;
+        queue<State<T>*> open;
         // Enqueue initial state
         open.push(initial);
 
         // Do a BFS starting from initial state
         while (!open.empty()) {
-            State<T> curr = open.front();
+            State<T> *curr = open.front();
 
             // If we have reached the goal state, we are done
             if (curr->getState() == goal->getState()) {
