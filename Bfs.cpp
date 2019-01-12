@@ -5,7 +5,7 @@
 #include "Bfs.h"
 
 template<typename T>
-SearcherResult Bfs<T>::search(Searchable<T> searchable) {
+SearcherResult search(Searchable<T> searchable) {
     map<T, State<T>> data = searchable.getAllPossibleStates();
     State<T> initial = searchable.getInitialState();
     State<T> goal = searchable.getGoalState();

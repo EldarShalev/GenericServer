@@ -16,8 +16,6 @@
 
 template<typename T>
 class Bfs : public Searcher<T> {
-public:
-    SearcherResult search(Searchable<T> searchable);
 };
 
 

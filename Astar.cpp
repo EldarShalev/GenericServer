@@ -25,7 +25,7 @@ void Astar<T>::calcLogic(State<T> curr, set<State<T>> &openList) {
 }
 
 template<typename T>
-SearcherResult Astar<T>::search(Searchable<T> searchable) {
+SearcherResult search(Searchable<T> searchable) {
     map<T, State<T>> data = searchable.getAllPossibleStates();
     int m = data.size();
     int n = m;

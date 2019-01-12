@@ -18,8 +18,6 @@ template<typename T>
 class Astar : public Searcher<T> {
 private:
     void calcLogic(State<T> curr, set<State<T>> &openList);
-public:
-    SearcherResult search(Searchable<T> searchable);
 };
 
 #endif //SERVER_ASTAR_H
