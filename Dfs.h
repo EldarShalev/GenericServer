@@ -16,6 +16,11 @@ public:
         State<T> *initial = searchable->getInitialState();
         State<T> *goal = searchable->getGoalState();
 
+        // If the destination is the same as source
+        if (initial->getState() == goal->getState()) {
+            return Utils::getSearcherResult(*initial);
+        }
+
         // Initially mark all vertices as not visited
         map<T, bool> visited;
 
