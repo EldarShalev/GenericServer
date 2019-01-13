@@ -6,7 +6,7 @@
 #define SERVER_CACHEMANAGER_H
 
 
-template<class Solution, class Problem>
+template<typename Problem, typename Solution>
 class CacheManager {
 
 public:

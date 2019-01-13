@@ -16,23 +16,49 @@ const char fileDelimiter = '$';
 
 using namespace std;
 
-class FileCacheManager : public CacheManager<std::string, std::string> {
+template<typename Problem, typename Solution>
+class FileCacheManager : public virtual CacheManager<Problem, Solution> {
 
 private:
-    unordered_map<string, string> problemToSolutions;
+    map<Problem, Solution> problemToSolutions;
 public:
 
-    FileCacheManager();
+    FileCacheManager() { loadFileToMap(); }
 
-    bool isSolutionSavedInCache(string problem);
+    bool isSolutionSavedInCache(Problem problem) {
+        return this->problemToSolutions.count(problem) > 0;
+    }
 
-    string getSolutionFromCache(string problem);
+    Solution getSolutionFromCache(Problem problem) { return this->problemToSolutions.at(problem); }
 
-    void saveSolutionForProblem(string problem, string solution);
+    void saveSolutionForProblem(Problem problem, Solution solution) {
+        problemToSolutions.insert(make_pair(problem, solution));
+        saveAlsoToFile(problem, solution);
+    }
 
-    void saveAlsoToFile(string problem, string solution);
+    void saveAlsoToFile(Problem problem, Solution solution) {
+        ofstream myfile;
+        myfile.open("Solutions.txt", ios::app | fstream::out);
+        if (myfile.is_open()) {
+           // myfile << problem << fileDelimiter << solution << "\n";
+            myfile << "TODO" << fileDelimiter << "TODO" << "\n";
+            myfile.close();
+        }
+    }
 
-    void loadFileToMap();
+    void loadFileToMap() {
+        ifstream myfile;
+        string line;
+        vector<string> parsing;
+        myfile.open("Solutions.txt");
+        while (getline(myfile, line)) {
+            parsing = Utils::splitToVectorByDelimiter(line, fileDelimiter);
+            //problemToSolutions.insert(make_pair(parsing.at(0), parsing.at(1)));
+            problemToSolutions.insert(make_pair("TODO", "TODO"));
+        }
+        myfile.close();
+
+    }
 };
 
 

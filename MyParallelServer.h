@@ -22,7 +22,7 @@ class MyParallelServer : public Server {
 public:
     MyParallelServer() {}
 
-    void open(int port, ClientHandler *ch);
+    void open(int port, ClientHandler *handler);
 
     void stop();
 

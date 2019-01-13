@@ -2,6 +2,7 @@
 // Created by Eldar on 12-Jan-19.
 //
 
+#include <vector>
 #include "MyParallelServer.h"
 
 
@@ -14,28 +15,30 @@ public:
 
 static void *connectionHandler(void *context) {
     my_thread_info info = *((my_thread_info *) context);
-    pthread_t parallelthreadId;
+    vector<string> vic;
 
     //Accept and incoming connection
     puts("Waiting for incoming connections...");
-    char buffer[4096] = {0};
     bool continueReading = true;
+    char buffer[4096] = {0};
     while (continueReading) {
         read(info.clientSocket, buffer, sizeof(buffer));
         if (buffer[0] != '\0') {
-            if ("end" == buffer) {
-                // TODO
+            vic.push_back(buffer);
+            if (buffer == "end\n\r") {
+                continueReading = false;
+                info.clientHandler->handleClient(vic);
             }
         }
+
     }
 }
 
 
-void MyParallelServer::open(int port, ClientHandler *ch) {
+void MyParallelServer::open(int port, ClientHandler *handler) {
     int opt = 1;
     struct sockaddr_in server, client;
     int serverDescriptor;
-    pthread_t threadId;
 
     // Creating serverSocket file descriptor
     if ((serverDescriptor = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == 0) {
@@ -64,23 +67,28 @@ void MyParallelServer::open(int port, ClientHandler *ch) {
 
     //Accept and incoming connection
     cout << ("Waiting for incoming connections...") << endl;
-    socklen_t addrlen = sizeof(sockaddr_in);
-    int acceptConnection;
-    if (acceptConnection = accept(serverDescriptor, (struct sockaddr *) &client, &addrlen)) {
-        cout << "Connection accepted, starting listener thread" << endl;
-    }
+    int i = 0;
+    while (1) {
+        pthread_t threadId[50];
+        socklen_t addrlen = sizeof(sockaddr_in);
+        int acceptConnection;
+        if (acceptConnection = accept(serverDescriptor, (struct sockaddr *) &client, &addrlen)) {
+            cout << "Connection accepted, starting listener thread" << endl;
+        }
 
-    my_thread_info info;
-    info.serverSocket = serverDescriptor;
-    info.clientHandler = ch;
-    info.clientSocket = acceptConnection;
+        my_thread_info info;
+        info.serverSocket = serverDescriptor;
+        info.clientHandler = handler;
+        info.clientSocket = acceptConnection;
 
-    int index = pthread_create(&threadId, NULL, connectionHandler, (void *) &info);
-    if (index < 0) {
-        perror("could not create thread");
-        exit(EXIT_FAILURE);
+        int index = pthread_create(&threadId[i], NULL, connectionHandler, (void *) &info);
+        if (index < 0) {
+            perror("could not create thread");
+            exit(EXIT_FAILURE);
+        }
+        i++;
+        //pthread_join(threadId, NULL);
     }
-    pthread_join(threadId, NULL);
 }
 
 void MyParallelServer::stop() {

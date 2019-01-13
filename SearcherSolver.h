@@ -14,10 +14,21 @@
 template<typename T>
 class SearcherSolver : public Solver<SearcherResult, Searchable<T>> {
 private:
-    Searcher<T> searcher;
+    Searcher<T> *searcher;
 public:
-    SearcherSolver(const Searcher<T> &searcher) : searcher(searcher) {}
-    SearcherResult solve(Searchable<T> searchable);
+    // Default constructor, the searcher will updated in run-time according to selected algorithm we want to inject
+    //SearcherSolver() {}
+    SearcherSolver<T>() {}
+
+    SearcherResult solve(Searchable<T> *searchable) {
+        return searcher->search(searchable);
+    }
+
+    void setSearcher(Searcher<T> *searcher) {
+        SearcherSolver::searcher = searcher;
+
+    }
+
 };
 
 

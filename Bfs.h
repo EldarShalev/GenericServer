@@ -17,7 +17,7 @@
 template<typename T>
 class Bfs : public virtual Searcher<T> {
 public:
-    SearcherResult search(Searchable<T>* searchable) {
+    SearcherResult search(Searchable<T> *searchable) {
         State<T> *initial = searchable->getInitialState();
         State<T> *goal = searchable->getGoalState();
 
@@ -26,7 +26,7 @@ public:
         visited[initial->getState()] = true;
 
         // Create a queue
-        queue<State<T>*> open;
+        queue<State<T> *> open;
         // Enqueue initial state
         open.push(initial);
 
@@ -36,13 +36,15 @@ public:
 
             // If we have reached the goal state, we are done
             if (curr->getState() == goal->getState()) {
+                // TODO delete here the cost
+                cout << curr->getCost();
                 return Utils::getSearcherResult(*curr);
             }
 
             // Otherwise dequeue the state in the queue and enqueue its adjacent states
             open.pop();
 
-            vector<State<T>*> nextStates = searchable->getAllPossibleStates(curr);
+            vector<State<T> *> nextStates = searchable->getAllPossibleStates(curr);
 
             for (int i = 0; i < nextStates.size(); i++) {
                 State<T> *state = nextStates[i];

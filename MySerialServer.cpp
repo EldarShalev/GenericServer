@@ -13,6 +13,7 @@ public:
 
 static void *connectionHandler(void *context) {
     my_thread_info info = *((my_thread_info *) context);
+    vector<string> vic;
 
     //Accept and incoming connection
     puts("Waiting for incoming connections...");
@@ -21,9 +22,10 @@ static void *connectionHandler(void *context) {
     while (continueReading) {
         read(info.clientSocket, buffer, sizeof(buffer));
         if (buffer[0] != '\0') {
-            info.clientHandler->handleClient(buffer);
+            vic.push_back(buffer);
             if ("end" == buffer) {
                 continueReading = false;
+                info.clientHandler->handleClient(vic);
             }
         }
     }

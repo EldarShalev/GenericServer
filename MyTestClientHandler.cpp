@@ -13,7 +13,7 @@ void MyTestClientHandler::handleClient(string problem) {
         this->cacheManager->getSolutionFromCache(parsedProblem);
     } else {
 
-        reverseString = this->solver->solve(problem);
+        reverseString = this->solver->solve(&problem);
         this->cacheManager->saveSolutionForProblem(parsedProblem, reverseString);
     }
 }

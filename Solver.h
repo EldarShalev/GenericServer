@@ -5,10 +5,11 @@
 #ifndef SERVER_SOLVER_H
 #define SERVER_SOLVER_H
 
-template<class Solution, class Problem>
+template<typename Solution, typename Problem>
 class Solver {
 public:
-    virtual Solution solve(Problem p) = 0;
+    virtual Solution solve(Problem *p) = 0;
+    //virtual Solution solve(Problem p) = 0;
 };
 
 

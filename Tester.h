@@ -16,6 +16,7 @@ class Tester {
 public:
     void testSearcher(Searcher<T> *searcher, Searchable<T> *searchable) {
         SearcherResult solution = searcher->search(searchable);
+        return;
     }
 
 };

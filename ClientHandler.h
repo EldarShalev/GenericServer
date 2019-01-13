@@ -8,14 +8,14 @@
 #include <iostream>
 #include <ostream>
 #include <string>
-
+#include <vector>
 using namespace std;
 
 class ClientHandler {
 
 public:
 
-    virtual void handleClient(string buffer) = 0;
+    virtual void handleClient(vector<string> buffer) = 0;
 };
 
 
