@@ -15,7 +15,7 @@ class ClientHandler {
 
 public:
 
-    virtual void handleClient(vector<string> buffer) = 0;
+    virtual string handleClient(vector<string> buffer) = 0;
 };
 
 

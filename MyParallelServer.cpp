@@ -4,7 +4,13 @@
 
 #include <vector>
 #include "MyParallelServer.h"
+#include <string>
+#include <cstring>
+#include <string.h>
 
+
+using std::string;
+using std::stringstream;
 
 class my_thread_info {
 public:
@@ -16,18 +22,19 @@ public:
 static void *connectionHandler(void *context) {
     my_thread_info info = *((my_thread_info *) context);
     vector<string> vic;
-
+    std::string prefix("end");
     //Accept and incoming connection
     puts("Waiting for incoming connections...");
     bool continueReading = true;
-    char buffer[4096] = {0};
     while (continueReading) {
+        char buffer[4096] = {0};
         read(info.clientSocket, buffer, sizeof(buffer));
         if (buffer[0] != '\0') {
             vic.push_back(buffer);
-            if (buffer == "end\n\r") {
+            if (strlen(buffer) >= 3 && (strncmp("end", buffer, 3) == 0)) {
                 continueReading = false;
-                info.clientHandler->handleClient(vic);
+                string solution = info.clientHandler->handleClient(vic);
+                send(info.clientSocket, solution.c_str(), strlen(solution.c_str()), 0);
             }
         }
 
