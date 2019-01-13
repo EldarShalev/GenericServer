@@ -17,7 +17,7 @@
 #include "Bfs.h"
 #include "Tester.h"
 #include "Astar.h"
-
+#include <numeric>
 
 template<typename Solution, typename Problem>
 class MyClientHandler : public ClientHandler {
@@ -42,34 +42,41 @@ public:
         vector<string> vic2(vic.begin() + 3, vic.end() - 1);
         vector<vector<int>> intVector = Utils::vecStringToInt(vic2, sizeOfMatrix);
         Searchable<Point> *searchable = new SearchableMatrix(sizeOfMatrix, start, end, intVector);
+        string s, solution;
+        s = accumulate(vic.begin(), vic.end(), s);
+        if (this->cacheManager->isSolutionSavedInCache(s)) {
+            solution = this->cacheManager->getSolutionFromCache(s);
+        } else {
+            // TODO if not found - run the algorithms
+            // We run each algorithm on the matrix and save the solution
+            Searcher<Point> *searcher1 = new Bfs<Point>();
+            Searcher<Point> *searcher2 = new Dfs<Point>();
+            Searcher<Point> *searcher3 = new BestFs<Point>();
+            Searcher<Point> *searcher4 = new Astar<Point>();
+            Tester<Point> *tester;
 
-        // TODO first search the solution in the cache manager
+            SearcherResult searcherResult1 = tester->testSearcher(searcher1, searchable);
+            SearcherResult searcherResult2 = tester->testSearcher(searcher2, searchable);
+            SearcherResult searcherResult3 = tester->testSearcher(searcher3, searchable);
+            SearcherResult searcherResult4 = tester->testSearcher(searcher4, searchable);
 
-        // TODO if not found - run the algorithms
-        // We run each algorithm on the matrix and save the solution
-        Searcher<Point> *searcher1 = new Bfs<Point>();
-        Searcher<Point> *searcher2 = new Dfs<Point>();
-        Searcher<Point> *searcher3 = new BestFs<Point>();
-        Searcher<Point> *searcher4 = new Astar<Point>();
-        Tester<Point> *tester;
+            delete searcher1;
+            delete searcher2;
+            delete searcher3;
+            delete searcher4;
+        }
 
-        SearcherResult *searcherResult1 = tester->testSearcher(searcher1, searchable);
-        SearcherResult *searcherResult2 = tester->testSearcher(searcher2, searchable);
-        SearcherResult *searcherResult3 = tester->testSearcher(searcher3, searchable);
-        SearcherResult *searcherResult4 = tester->testSearcher(searcher4, searchable);
 
         // TODO save the results in the cacheManager
 
 
 
         // Delete allocated memory
-        delete searcher1;
-        delete searcher2;
-        delete searcher3;
-        delete searcher4;
+
         delete searchable;
 
         // TODO return the PATH (LEFT->RIGHT>UP>......)
+        return solution;
 
     }
 
