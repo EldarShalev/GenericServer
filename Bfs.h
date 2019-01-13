@@ -36,8 +36,6 @@ public:
 
             // If we have reached the goal state, we are done
             if (curr->getState() == goal->getState()) {
-                // TODO delete here the cost
-                cout << curr->getCost();
                 return Utils::getSearcherResult(*curr);
             }
 

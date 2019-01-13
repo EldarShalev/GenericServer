@@ -11,48 +11,52 @@
 
 template<typename T>
 class Dfs : public Searcher<T> {
-private:
-    State<T> *DFS(Searchable<T> *searchable, State<T> *initial, T dest, map<T, bool> visited) {
-        visited[initial->getState()] = true;
-
-        // If we have reached the destination,we are done
-        if (initial->getState() == dest) {
-            return initial;
-        }
-
-        vector<State<T>*> nextStates = searchable->getAllPossibleStates(initial);
-
-        for(int i = 0; i < nextStates.size(); ++i) {
-            State<T> *next = nextStates[i];
-            if(!visited[next->getState()]) {
-                State<T> *state = DFS(searchable, next, dest, visited);
-                if(state != NULL) {
-                    if (state->getPrevious() != NULL) {
-                        int prev = Utils::getSearcherResult(*state).distance;
-                        State<T> whatIf(state->getState(), state->getCost());
-                        whatIf.setPrevious(initial);
-                        int now = Utils::getSearcherResult(whatIf).distance;
-                        if (prev <= now) {
-                            //now is not shorter
-                            continue;
-                        }
-                    }
-                    //ignore dead ends
-                    state->setPrevious(initial);
-                }
-            }
-        }
-        return initial;
-    }
-
 public:
     SearcherResult search(Searchable<T> *searchable) {
         State<T> *initial = searchable->getInitialState();
+        State<T> *goal = searchable->getGoalState();
+
+        // Initially mark all vertices as not visited
         map<T, bool> visited;
 
-        State<T> *state = DFS(searchable, initial, searchable->getGoalState()->getState(), visited);
-        State<T> *goal = searchable->getGoalState();
-        return Utils::getSearcherResult(*goal);
+        // Create a stack for DFS
+        stack<State<T>*> stack;
+
+        // Push the current source node.
+        stack.push(initial);
+        visited[initial->getState()] = true;
+
+        while (!stack.empty())
+        {
+            // Pop a vertex from stack and print it
+            State<T>* curr = stack.top();
+            stack.pop();
+
+            // Get all adjacent vertices of the popped vertex s
+            // If a adjacent has not been visited, then puah it
+            // to the stack.
+            vector<State<T>*> nextStates = searchable->getAllPossibleStates(curr);
+
+            for(int i = 0; i < nextStates.size(); ++i) {
+                State<T> *state = nextStates[i];
+                T next = state->getState();
+
+                if(next == goal->getState()) {
+                    state->setPrevious(curr);
+                    return Utils::getSearcherResult(*state);
+                }
+
+                // if adjacent state is valid, has path and not visited yet, enqueue it.
+                if (!visited[next]) {
+                    // mark state as visited and enqueue it
+                    visited[next] = true;
+                    state->setPrevious(curr);
+                    stack.push(state);
+                }
+            }
+        }
+
+        return {-1, -1};
     }
 };
 
