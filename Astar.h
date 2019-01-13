@@ -44,10 +44,15 @@ public:
                 State<T> *next = nextStates[i];
 
                 int fWhatIf = visited[curr->getState()] + next->getCost() + 1;
-                if (visited.count(next->getState()) == 0 || fWhatIf <= visited[next->getState()]) {
+                if (visited.count(next->getState()) == 0) {
                     next->setPrevious(curr);
-                    openList.insert(next);
                     visited[next->getState()] = fWhatIf;
+                    openList.insert(next);
+                }
+                else if(fWhatIf <= visited[next->getState()]){
+                    next->setPrevious(curr);
+                    visited[next->getState()] = fWhatIf;
+                    //dont insert, already in
                 }
             }
         }
