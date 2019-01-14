@@ -42,12 +42,13 @@ public:
         vector<string> vic2(vic.begin() + 3, vic.end() - 1);
         vector<vector<int>> intVector = Utils::vecStringToInt(vic2, sizeOfMatrix);
         Searchable<Point> *searchable = new SearchableMatrix(sizeOfMatrix, start, end, intVector);
-        string s, solution;
-        s = accumulate(vic.begin(), vic.end(), s);
-        if (this->cacheManager->isSolutionSavedInCache(s)) {
-            solution = this->cacheManager->getSolutionFromCache(s);
+        // TODO - Check how the matrix is saved in cache
+        string matrix_problem, solution;
+        matrix_problem = accumulate(vic.begin(), vic.end(), matrix_problem);
+        // TODO - Check this search from cache
+        if (this->cacheManager->isSolutionSavedInCache(matrix_problem)) {
+            solution = this->cacheManager->getSolutionFromCache(matrix_problem);
         } else {
-            // TODO if not found - run the algorithms
             // We run each algorithm on the matrix and save the solution
             Searcher<Point> *searcher1 = new Bfs<Point>();
             Searcher<Point> *searcher2 = new Dfs<Point>();
@@ -60,22 +61,17 @@ public:
             SearcherResult searcherResult3 = tester->testSearcher(searcher3, searchable);
             SearcherResult searcherResult4 = tester->testSearcher(searcher4, searchable);
 
+            // TODO - Which solution save to cache? each alogrithm has different result.
+            solution = searcherResult1.path;
+            this->cacheManager->saveSolutionForProblem(matrix_problem, solution);
+            // Delete allocated memory
             delete searcher1;
             delete searcher2;
             delete searcher3;
             delete searcher4;
         }
-
-
-        // TODO save the results in the cacheManager
-
-
-
         // Delete allocated memory
-
         delete searchable;
-
-        // TODO return the PATH (LEFT->RIGHT>UP>......)
         return solution;
 
     }
