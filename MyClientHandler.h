@@ -33,14 +33,13 @@ public:
 
     string handleClient(vector<string> vic) {
         // Parsing vector to matrix
-        int sizeOfMatrix = atoi(vic.at(0).c_str());
-        string point_start = vic.at(1);
-        string point_end = vic.at(2);
+        string point_start = vic.at(vic.size() - 2);
+        string point_end = vic.at(vic.size() - 1);
         Point start = Utils::getPointFromString(point_start);
         Point end = Utils::getPointFromString(point_end);
-        vector<string> vic2(vic.begin() + 3, vic.end());
-        vector<vector<int>> intVector = Utils::vecStringToInt(vic2, sizeOfMatrix);
-        Searchable<Point> *searchable = new SearchableMatrix(sizeOfMatrix, start, end, intVector);
+        vector<string> vic2(vic.begin(), vic.end() - 3);
+        vector<vector<int>> intVector = Utils::vecStringToMatrix(vic2);
+        Searchable<Point> *searchable = new SearchableMatrix(start, end, intVector);
         string matrix_problem, solution;
         matrix_problem = accumulate(vic.begin(), vic.end(), matrix_problem);
         if (this->cacheManager->isSolutionSavedInCache(matrix_problem)) {
@@ -51,12 +50,13 @@ public:
             Searcher<Point> *searcher2 = new Dfs<Point>();
             Searcher<Point> *searcher3 = new BestFs<Point>();
             Searcher<Point> *searcher4 = new Astar<Point>();
-            Tester<Point> *tester;
+            Tester<Point> tester;
 
-//            SearcherResult searcherResult1 = tester->testSearcher(searcher1, searchable);
-//            SearcherResult searcherResult2 = tester->testSearcher(searcher2, searchable);
-            SearcherResult searcherResult3 = tester->testSearcher(searcher3, searchable);
-//            SearcherResult searcherResult4 = tester->testSearcher(searcher4, searchable);
+//            SearcherResult searcherResult1 = tester.testSearcher(searcher1, searchable);
+//            SearcherResult searcherResult2 = tester.testSearcher(searcher2, searchable);
+            SearcherResult searcherResult3 = tester.testSearcher(searcher3, searchable);
+//            SearcherResult searcherResult4 = tester.testSearcher(searcher4, searchable);
+
             solution = searcherResult3.path;
             this->cacheManager->saveSolutionForProblem(matrix_problem, solution);
             // Delete allocated memory

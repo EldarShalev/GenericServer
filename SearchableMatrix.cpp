@@ -4,8 +4,8 @@
 
 #include "SearchableMatrix.h"
 
-SearchableMatrix::SearchableMatrix(int size, const Point &start, const Point &dest, const vector<vector<int>> &matrix)
-        : Searchable<Point>(start, dest, matrixToStates(matrix)), size(size), start(&start), dest(&dest),
+SearchableMatrix::SearchableMatrix(const Point &start, const Point &dest, const vector<vector<int>> &matrix)
+        : Searchable<Point>(start, dest, matrixToStates(matrix)), start(&start), dest(&dest),
           matrix(matrix) {
 }
 

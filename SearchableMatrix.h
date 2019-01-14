@@ -11,13 +11,12 @@
 
 class SearchableMatrix : public virtual Searchable<Point> {
 private:
-    int size;
     const Point* start;
     const Point* dest;
     vector<vector<int>> matrix;
     map<Point, State<Point>*> matrixToStates(const vector<vector<int>> &matrix);
 public:
-    SearchableMatrix(int size, const Point &start, const Point &dest, const vector<vector<int>> &matrix);
+    SearchableMatrix(const Point &start, const Point &dest, const vector<vector<int>> &matrix);
 };
 
 

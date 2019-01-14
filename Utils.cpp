@@ -40,21 +40,31 @@ Point Utils::getPointFromString(string str) {
     return p1;
 }
 
-vector<vector<int>> Utils::vecStringToInt(vector<string> vector1, int matrixSize) {
-    vector<vector<int>> vic1;
-    vector<int> temp;
-    int row = 0;
-    int col = 0;
-    for (vector<string>::iterator it = vector1.begin(); it != vector1.end(); ++it) {
-        for (int i = 0; i < matrixSize; i++) {
-            int num = stoi(splitStringByDelimiterAndIndex(*it, ',', i + 1));
-            temp.push_back(num);
-        }
-
-        vic1.push_back(temp);
-        temp.clear();
+vector<string> Utils::split(const string &s, char delimiter) {
+    vector<string> tokens;
+    string token;
+    istringstream tokenStream(s);
+    while (getline(tokenStream, token, delimiter)) {
+        tokens.push_back(token);
     }
-    return vic1;
+    return tokens;
+}
+
+vector<vector<int>> Utils::vecStringToMatrix(vector<string> strings) {
+    vector<vector<int>> matrix;
+    vector<int> array;
+
+    for (int i = 0; i < strings.size(); ++i) {
+        vector<string> splitted = split(strings[i], ',');
+        for (int j = 0; j < splitted.size(); ++j) {
+            int num = stoi(splitted[j]);
+            array.push_back(num);
+        }
+        matrix.push_back(array);
+        array.clear();
+    }
+
+    return matrix;
 }
 
 string Utils::splitStringByDelimiterAndIndex(string str, char delimiter, int index) {
