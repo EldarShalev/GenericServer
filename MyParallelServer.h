@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <sstream>
 #include <unistd.h>
+
 using namespace server_side;
 using namespace std;
 
@@ -27,6 +28,8 @@ public:
     void stop();
 
     bool isOpen();
+
+    static vector<string> parseVector(vector<string> vic);
 };
 
 

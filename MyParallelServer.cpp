@@ -8,6 +8,8 @@
 #include <cstring>
 #include <string.h>
 
+const char OS_Delimiter = '\n';
+
 
 using std::string;
 using std::stringstream;
@@ -18,6 +20,26 @@ public:
     int clientSocket;
     ClientHandler *clientHandler;
 };
+
+vector<string> MyParallelServer::parseVector(vector<string> vic1) {
+    vector<string> parsedVector;
+    string temp;
+    for (vector<string>::iterator it = vic1.begin(); it < vic1.end(); ++it) {
+        for (char &ch: *it) {
+            // TODO - CHANGE THIS TO UBUNTU
+            if (ch == '\r') {
+                parsedVector.push_back(temp);
+                temp = "";
+            } else if (ch == 'e') {
+                return parsedVector;
+            } else if (ch == '\n') {
+                continue;
+            } else {
+                temp += ch;
+            }
+        }
+    }
+}
 
 static void *connectionHandler(void *context) {
     my_thread_info info = *((my_thread_info *) context);
@@ -30,11 +52,14 @@ static void *connectionHandler(void *context) {
         char buffer[4096] = {0};
         read(info.clientSocket, buffer, sizeof(buffer));
         if (buffer[0] != '\0') {
+            string s = buffer;
             vic.push_back(buffer);
-            if (strlen(buffer) >= 3 && (strncmp("end", buffer, 3) == 0)) {
+            if (s.find("end") != string::npos) {
                 continueReading = false;
-                string solution = info.clientHandler->handleClient(vic);
+                vector<string> final = MyParallelServer::parseVector(vic);
+                string solution = info.clientHandler->handleClient(final);
                 send(info.clientSocket, solution.c_str(), strlen(solution.c_str()), 0);
+
             }
         }
 
@@ -75,8 +100,8 @@ void MyParallelServer::open(int port, ClientHandler *handler) {
     //Accept and incoming connection
     cout << ("Waiting for incoming connections...") << endl;
     int i = 0;
+    pthread_t threadId[50];
     while (1) {
-        pthread_t threadId[50];
         socklen_t addrlen = sizeof(sockaddr_in);
         int acceptConnection;
         if (acceptConnection = accept(serverDescriptor, (struct sockaddr *) &client, &addrlen)) {

@@ -40,8 +40,7 @@ public:
         ofstream myfile;
         myfile.open("Solutions.txt", ios::app | fstream::out);
         if (myfile.is_open()) {
-           // myfile << problem << fileDelimiter << solution << "\n";
-            myfile << "TODO" << fileDelimiter << "TODO" << "\n";
+            myfile << problem << fileDelimiter << solution << "\n";
             myfile.close();
         }
     }
@@ -53,8 +52,7 @@ public:
         myfile.open("Solutions.txt");
         while (getline(myfile, line)) {
             parsing = Utils::splitToVectorByDelimiter(line, fileDelimiter);
-            //problemToSolutions.insert(make_pair(parsing.at(0), parsing.at(1)));
-            problemToSolutions.insert(make_pair("TODO", "TODO"));
+            problemToSolutions.insert(make_pair(parsing.at(0), parsing.at(1)));
         }
         myfile.close();
 

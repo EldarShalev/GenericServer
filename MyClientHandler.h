@@ -32,20 +32,17 @@ public:
     }
 
     string handleClient(vector<string> vic) {
-
         // Parsing vector to matrix
         int sizeOfMatrix = atoi(vic.at(0).c_str());
         string point_start = vic.at(1);
         string point_end = vic.at(2);
         Point start = Utils::getPointFromString(point_start);
         Point end = Utils::getPointFromString(point_end);
-        vector<string> vic2(vic.begin() + 3, vic.end() - 1);
+        vector<string> vic2(vic.begin() + 3, vic.end());
         vector<vector<int>> intVector = Utils::vecStringToInt(vic2, sizeOfMatrix);
         Searchable<Point> *searchable = new SearchableMatrix(sizeOfMatrix, start, end, intVector);
-        // TODO - Check how the matrix is saved in cache
         string matrix_problem, solution;
         matrix_problem = accumulate(vic.begin(), vic.end(), matrix_problem);
-        // TODO - Check this search from cache
         if (this->cacheManager->isSolutionSavedInCache(matrix_problem)) {
             solution = this->cacheManager->getSolutionFromCache(matrix_problem);
         } else {
@@ -56,13 +53,11 @@ public:
             Searcher<Point> *searcher4 = new Astar<Point>();
             Tester<Point> *tester;
 
-            SearcherResult searcherResult1 = tester->testSearcher(searcher1, searchable);
-            SearcherResult searcherResult2 = tester->testSearcher(searcher2, searchable);
+//            SearcherResult searcherResult1 = tester->testSearcher(searcher1, searchable);
+//            SearcherResult searcherResult2 = tester->testSearcher(searcher2, searchable);
             SearcherResult searcherResult3 = tester->testSearcher(searcher3, searchable);
-            SearcherResult searcherResult4 = tester->testSearcher(searcher4, searchable);
-
-            // TODO - Which solution save to cache? each alogrithm has different result.
-            solution = searcherResult1.path;
+//            SearcherResult searcherResult4 = tester->testSearcher(searcher4, searchable);
+            solution = searcherResult3.path;
             this->cacheManager->saveSolutionForProblem(matrix_problem, solution);
             // Delete allocated memory
             delete searcher1;
