@@ -50,7 +50,7 @@ namespace better_priority_queue {
             if (size() > 1)
                 *heap.begin() = std::move(*(heap.end() - 1));
             heap.pop_back();
-            sift_down(0);
+            sift_up(0);
         }
 
         PriorityQueueNode<Key, Priority> pop_value(bool remember_key = true) {
@@ -60,7 +60,7 @@ namespace better_priority_queue {
             if (size() > 1)
                 *heap.begin() = std::move(*(heap.end() - 1));
             heap.pop_back();
-            sift_down(0);
+            sift_up(0);
             return ret;
         }
 
@@ -74,8 +74,12 @@ namespace better_priority_queue {
                 return push(key, priority, only_if_higher);
         }
 
+        bool exists(const Key &key) {
+            return id_to_heappos.count(key) > 0;
+        }
+
         std::pair<bool, Priority> get_priority(const Key &key) {
-            if (key >= id_to_heappos.size()) {
+            if (id_to_heappos.count(key) > 0) {
                 size_t pos = id_to_heappos[key];
                 if (pos >= 0) {
                     return {true, heap[pos].priority};
@@ -92,7 +96,7 @@ namespace better_priority_queue {
                 size_t n = heap.size();
                 id_to_heappos[key] = n; // For consistency in the case where nothing moves (early return)
                 heap.emplace_back(key, priority);
-                sift_up(n);
+                sift_down(n);
                 return true;
             }
             return false;
@@ -103,11 +107,11 @@ namespace better_priority_queue {
             size_t heappos = id_to_heappos[key];
             if (heappos >= ((size_t) -2)) return false;
             Priority &priority = heap[heappos].priority;
-            if (new_priority > priority) {
+            if (!only_if_higher && new_priority < priority) {
                 priority = new_priority;
                 sift_up(heappos);
                 return true;
-            } else if (!only_if_higher && new_priority < priority) {
+            } else if (new_priority > priority) {
                 priority = new_priority;
                 sift_down(heappos);
                 return true;
@@ -130,8 +134,8 @@ namespace better_priority_queue {
                 heappos = child;
                 child = 2 * child + 1;
                 if (child >= len) break;
-                if (child + 1 < len && heap[child + 1] > heap[child]) ++child;
-            } while (heap[child] > val);
+                if (child + 1 < len && heap[child + 1] < heap[child]) ++child;
+            } while (heap[child] < val);
             heap[heappos] = std::move(val);
             id_to_heappos[heap[heappos].key] = heappos;
         }
@@ -140,7 +144,7 @@ namespace better_priority_queue {
             size_t len = heap.size();
             if (len < 2 || heappos <= 0) return;
             size_t parent = (heappos - 1) / 2;
-            if (!(heap[heappos] > heap[parent])) return;
+            if (!(heap[heappos] < heap[parent])) return;
             PriorityQueueNode<Key, Priority> val = std::move(heap[heappos]);
             do {
                 heap[heappos] = std::move(heap[parent]);
@@ -148,12 +152,11 @@ namespace better_priority_queue {
                 heappos = parent;
                 if (heappos <= 0) break;
                 parent = (parent - 1) / 2;
-            } while (heap[heappos] > heap[parent]);
+            } while (heap[heappos] < heap[parent]);
             heap[heappos] = std::move(val);
             id_to_heappos[heap[heappos].key] = heappos;
         }
     };
 }
-
 
 #endif //SERVER_UPDATABLEPRIORITYQUEUE_H

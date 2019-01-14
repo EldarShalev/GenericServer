@@ -42,14 +42,13 @@ public:
 
             for (int i = 0; i < nextStates.size(); i++) {
                 State<T> *next = nextStates[i];
-
                 int fWhatIf = visited[curr->getState()] + next->getCost() + 1;
-                if (visited.count(next->getState()) == 0) {
+
+                if (next->getPrevious() == NULL && visited.count(next->getState()) == 0) {
                     next->setPrevious(curr);
                     visited[next->getState()] = fWhatIf;
                     openList.insert(next);
-                }
-                else if(fWhatIf <= visited[next->getState()]){
+                } else if (openList.count(next) == 1 && fWhatIf < visited[next->getState()]) {
                     next->setPrevious(curr);
                     visited[next->getState()] = fWhatIf;
                     //dont insert, already in
