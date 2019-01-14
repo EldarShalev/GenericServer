@@ -33,23 +33,22 @@ public:
 
         while (!open.empty()) {
             PriorityQueueNode<State<T> *, int> curr = open.pop_value();
-
             vector<State<T> *> nextStates = searchable->getAllPossibleStates(curr.key);
 
             for (int i = 0; i < nextStates.size(); i++) {
                 State<T> *nextState = nextStates[i];
                 T next = nextState->getState();
 
-                if (nextState->getPrevious() == NULL && visited.find(next) == visited.end()) {
+                int whatIf = curr.priority + nextState->getCost() + 1;
+
+                if (nextState->getPrevious() == NULL && visited.count(next) == 0) {
                     nextState->setPrevious(curr.key);
-                    visited[next] = curr.priority + nextState->getCost() + 1;
-                    open.push(nextState, visited[next], true);
-                } else {
-                    if (curr.priority + nextState->getCost() < visited[next]) {
-                        nextState->setPrevious(curr.key);
-                        visited[next] = curr.priority + nextState->getCost() + 1;
-                        open.update(nextState, visited[next]);
-                    }
+                    visited[next] = whatIf;
+                    open.push(nextState, whatIf, true);
+                } else if (open.exists(nextState) && whatIf < visited[next]) {
+                    nextState->setPrevious(curr.key);
+                    visited[next] = whatIf;
+                    open.update(nextState, whatIf);
                 }
             }
         }
