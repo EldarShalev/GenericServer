@@ -23,7 +23,7 @@ public:
 
         // If the destination is the same as source
         if (initial->getState() == goal->getState()) {
-            return Utils::getSearcherResult(*initial);
+            return Utils::getSearcherResult(*initial, 1);
         }
 
         // Mark all the vertices as not visited
@@ -41,7 +41,7 @@ public:
 
             // If we have reached the goal state, we are done
             if (curr->getState() == goal->getState()) {
-                return Utils::getSearcherResult(*curr);
+                return Utils::getSearcherResult(*curr, visited.size());
             }
 
             // Otherwise dequeue the state in the queue and enqueue its adjacent states

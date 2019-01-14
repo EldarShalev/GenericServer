@@ -28,7 +28,7 @@ public:
     static string splitStringByDelimiterAndIndex(string str, char delimiter, int index);
 
     template<typename T>
-    static SearcherResult getSearcherResult(State<T> state) {
+    static SearcherResult getSearcherResult(State<T> state, int numOfEvaluatedNodes) {
         vector<string> shortestPath;
         State<T> *ptr = state.getPrevious();
         shortestPath.push_back(state.getDetails());
@@ -43,10 +43,10 @@ public:
         string parsedPath = parsingVectorOfPointsToPath(shortestPath);
         SearcherResult res;
 
-        // TODO add also res.numOfEvaluatedNodes
         res.path = parsedPath;
         res.distance = dist;
         res.cost = cost;
+        res.numOfEvaluatedNodes = numOfEvaluatedNodes;
 
         return res;
     }

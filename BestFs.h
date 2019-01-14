@@ -21,7 +21,7 @@ public:
 
         // If the destination is the same as source
         if (initial->getState() == goal->getState()) {
-            return Utils::getSearcherResult(*initial);
+            return Utils::getSearcherResult(*initial, 1);
         }
 
         // Create a priority queue
@@ -42,12 +42,12 @@ public:
 
                 if (nextState->getPrevious() == NULL && visited.find(next) == visited.end()) {
                     nextState->setPrevious(curr.key);
-                    visited[next] = curr.priority + nextState->getCost();
+                    visited[next] = curr.priority + nextState->getCost() + 1;
                     open.push(nextState, visited[next], true);
                 } else {
                     if (curr.priority + nextState->getCost() < visited[next]) {
                         nextState->setPrevious(curr.key);
-                        visited[next] = curr.priority + nextState->getCost();
+                        visited[next] = curr.priority + nextState->getCost() + 1;
                         open.update(nextState, visited[next]);
                     }
                 }
@@ -57,7 +57,7 @@ public:
         if (goal->getPrevious() == NULL) {
             return {-1, -1};
         }
-        return Utils::getSearcherResult(*goal);
+        return Utils::getSearcherResult(*goal, visited.size());
     }
 };
 

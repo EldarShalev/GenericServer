@@ -23,7 +23,7 @@ public:
 
         // If the destination is the same as source
         if (initial->getState() == goal->getState()) {
-            return Utils::getSearcherResult(*initial);
+            return Utils::getSearcherResult(*initial, 1);
         }
 
         map<T, int> visited;
@@ -60,7 +60,7 @@ public:
         if (goal->getPrevious() == NULL) {
             return {-1, -1};
         }
-        return Utils::getSearcherResult(*goal);
+        return Utils::getSearcherResult(*goal, visited.size());
     }
 };
 

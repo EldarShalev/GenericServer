@@ -14,8 +14,8 @@
 template<typename T>
 class Tester {
 public:
-    SearcherResult *testSearcher(Searcher<T> *searcher, Searchable<T> *searchable) {
-        SearcherResult *solution = searcher->search(searchable);
+    SearcherResult testSearcher(Searcher<T> *searcher, Searchable<T> *searchable) {
+        SearcherResult solution = searcher->search(searchable);
         return solution;
     }
 

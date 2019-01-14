@@ -18,7 +18,7 @@ public:
 
         // If the destination is the same as source
         if (initial->getState() == goal->getState()) {
-            return Utils::getSearcherResult(*initial);
+            return Utils::getSearcherResult(*initial, 1);
         }
 
         // Initially mark all vertices as not visited
@@ -48,7 +48,7 @@ public:
 
                 if(next == goal->getState()) {
                     state->setPrevious(curr);
-                    return Utils::getSearcherResult(*state);
+                    return Utils::getSearcherResult(*state, visited.size());
                 }
 
                 // if adjacent state is valid, has path and not visited yet, enqueue it.
