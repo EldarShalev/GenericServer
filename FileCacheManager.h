@@ -20,30 +20,40 @@ template<typename Problem, typename Solution>
 class FileCacheManager : public virtual CacheManager<Problem, Solution> {
 
 private:
+    mutex m;
     map<Problem, Solution> *problemToSolutions;
+    vector<string> *vic;
 public:
 
     FileCacheManager() {
         problemToSolutions = new map<Problem, Solution>;
+        vic = new vector<string>;
         loadFileToMap();
     }
 
     bool isSolutionSavedInCache(Problem problem) {
+        std::lock_guard<mutex> lockGuard(m);
         return this->problemToSolutions->count(problem) > 0;
     }
 
-    Solution getSolutionFromCache(Problem problem) { return this->problemToSolutions->at(problem); }
+    Solution getSolutionFromCache(Problem problem) {
+        std::lock_guard<mutex> lockGuard(m);
+        return this->problemToSolutions->at(problem);
+    }
 
     void saveSolutionForProblem(Problem problem, Solution solution) {
+        m.lock();
         problemToSolutions->insert(make_pair(problem, solution));
+        string to_push = problem + fileDelimiter + solution;
+        this->vic->push_back(to_push);
+        m.unlock();
     }
 
     void saveAllToFile() {
         ofstream myfile;
         myfile.open("Solutions.txt", ios::app | fstream::out);
-        for (typename map<Problem, Solution>::iterator it = problemToSolutions->begin();
-             it != problemToSolutions->end(); ++it) {
-            myfile << it->first << fileDelimiter << it->second << "\n";
+        for (vector<string>::iterator it = vic->begin(); it != vic->end(); ++it) {
+            myfile << *it << "\n";
         }
         myfile.close();
     }
@@ -63,6 +73,7 @@ public:
 
     ~FileCacheManager() {
         saveAllToFile();
+        delete vic;
         delete problemToSolutions;
     }
 };
