@@ -45,7 +45,6 @@ vector<string> MyParallelServer::parseVector(vector<string> vic1) {
 static void *connectionHandler(void *context) {
     my_thread_info info = *((my_thread_info *) context);
     vector<string> vic;
-    std::string prefix("end");
     //Accept and incoming connection
     puts("Waiting for incoming connections...");
     bool continueReading = true;
@@ -78,16 +77,19 @@ void MyParallelServer::open(int port, ClientHandler *handler) {
         exit(EXIT_FAILURE);
     }
 
-    // Forcefully attaching serverSocket to the port 8080
-    if (setsockopt(serverDescriptor, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))) {
-        perror("setsockopt");
-        exit(EXIT_FAILURE);
-    }
+    // Create timeout for incoming connection
+    timeval timeout;
+    timeout.tv_sec = 5;
+    timeout.tv_usec = 0;
+
+    setsockopt(serverDescriptor, SOL_SOCKET, SO_RCVTIMEO, (char *) &timeout, sizeof(timeout));
+
+
     server.sin_family = AF_INET;
     server.sin_addr.s_addr = INADDR_ANY;
     server.sin_port = htons(port);
 
-    // Forcefully attaching serverSocket to the port 8080
+    // Forcefully attaching serverSocket to port
     if (bind(serverDescriptor, (struct sockaddr *) &server, sizeof(server)) < 0) {
         perror("bind failed");
         exit(EXIT_FAILURE);
@@ -101,10 +103,16 @@ void MyParallelServer::open(int port, ClientHandler *handler) {
     cout << ("Waiting for incoming connections...") << endl;
     int indexOfThread = 0;
     pthread_t threadId[50];
-    while (indexOfThread < 1) {
+    int acceptConnection;
+    while (true) {
         socklen_t addrlen = sizeof(sockaddr_in);
-        int acceptConnection;
-        if (acceptConnection = accept(serverDescriptor, (struct sockaddr *) &client, &addrlen)) {
+        acceptConnection = accept(serverDescriptor, (struct sockaddr *) &client, &addrlen);
+        if (acceptConnection < 0) {
+            if (errno == EWOULDBLOCK) {
+                cout << "timeout!" << endl;
+                break;
+            }
+        } else {
             cout << "Connection accepted, starting listener thread" << endl;
         }
 
@@ -120,9 +128,15 @@ void MyParallelServer::open(int port, ClientHandler *handler) {
         }
         indexOfThread++;
     }
+    // If connection timeout, wait for other thread to finish calculating
     for (int j = 0; j < indexOfThread; j++) {
         pthread_join(threadId[j], NULL);
     }
+
+    // Close connection
+    close(acceptConnection);
+    close(serverDescriptor);
+
 
 }
 
