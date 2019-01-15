@@ -27,13 +27,12 @@ vector<string> MyParallelServer::parseVector(vector<string> vic1) {
     string temp;
     for (vector<string>::iterator it = vic1.begin(); it < vic1.end(); ++it) {
         for (char &ch: *it) {
-            // TODO - CHANGE THIS TO UBUNTU
-            if (ch == '\r') {
+            if (ch == '\n') {
                 parsedVector.push_back(temp);
                 temp = "";
             } else if (ch == 'e') {
                 return parsedVector;
-            } else if (ch == '\n') {
+            } else if (ch == '\r') {
                 continue;
             } else {
                 temp += ch;
@@ -110,6 +109,8 @@ void MyParallelServer::open(int port, ClientHandler *handler) {
         if (acceptConnection < 0) {
             if (errno == EWOULDBLOCK) {
                 cout << "timeout!" << endl;
+                break;
+            } else {
                 break;
             }
         } else {
