@@ -57,6 +57,7 @@ static void *connectionHandler(void *context) {
                 continueReading = false;
                 vector<string> final = MyParallelServer::parseVector(vic);
                 string solution = info.clientHandler->handleClient(final);
+                solution += '\n';
                 send(info.clientSocket, solution.c_str(), strlen(solution.c_str()), 0);
 
             }
