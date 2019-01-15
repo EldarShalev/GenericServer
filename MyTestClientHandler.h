@@ -10,6 +10,8 @@
 #include "CacheManager.h"
 #include "Utils.h"
 #include <string>
+#include <cstring>
+
 
 using namespace std;
 

@@ -5,7 +5,7 @@
 #include "MyTestClientHandler.h"
 
 
-void MyTestClientHandler::handleClient(string problem) {
+void MyTestClientHandler::handleClient(std::string problem) {
 
     string reverseString;
     string parsedProblem = Utils::parseString(problem, false);

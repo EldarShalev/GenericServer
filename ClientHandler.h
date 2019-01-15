@@ -8,6 +8,7 @@
 #include <iostream>
 #include <ostream>
 #include <string>
+#include <cstring>
 #include <vector>
 using namespace std;
 
@@ -15,7 +16,7 @@ class ClientHandler {
 
 public:
 
-    virtual string handleClient(vector<string> buffer) = 0;
+    virtual string handleClient(vector<std::string> buffer) = 0;
 };
 
 

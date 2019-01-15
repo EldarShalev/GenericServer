@@ -6,6 +6,7 @@
 #define SERVER_DFS_H
 
 #include <cstring>
+#include <string>
 #include "Utils.h"
 #include "Searcher.h"
 

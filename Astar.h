@@ -8,6 +8,7 @@
 #include <stack>
 #include <cmath>
 #include <cstring>
+#include <string>
 #include <climits>
 #include <set>
 #include "Utils.h"

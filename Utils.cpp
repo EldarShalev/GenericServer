@@ -5,7 +5,7 @@
 #include "Utils.h"
 
 vector<string> Utils::splitToVectorByDelimiter(string str, char delimiter) {
-    string temp = "";
+    string temp;
     vector<string> result;
     for (string::iterator it = str.begin(); it != str.end(); ++it) {
         if (*it != delimiter) {

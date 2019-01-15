@@ -6,8 +6,8 @@
 #define SERVER_FILECACHEMANAGER_H
 
 #include <string>
+#include <cstring>
 #include "CacheManager.h"
-#include "unordered_map"
 #include <iostream>
 #include <fstream>
 #include "Utils.h"

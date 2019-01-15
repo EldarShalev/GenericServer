@@ -5,19 +5,18 @@
 #include "SearchableMatrix.h"
 
 SearchableMatrix::SearchableMatrix(const Point &start, const Point &dest, const vector<vector<int>> &matrix)
-        : Searchable<Point>(start, dest, matrixToStates(matrix)), start(&start), dest(&dest),
-          matrix(matrix) {
+: Searchable<Point>(start, dest, matrixToStates(matrix)), start(&start), dest(&dest), matrix(matrix) {
 }
 
-map<Point, State<Point> *> SearchableMatrix::matrixToStates(const vector<vector<int>> &matrix) {
-    map<Point, State<Point> *> points;
+map<Point, State<Point> *> *SearchableMatrix::matrixToStates(const vector<vector<int>> &matrix) {
+    map<Point, State<Point> *> *points= new map<Point, State<Point> *>;
     for (int i = 0; i < matrix.size(); ++i) {
         for (int j = 0; j < matrix[i].size(); ++j) {
             Point pt = {i, j};
             string pointsToString = std::to_string(i) + "," + std::to_string(j);
             State<Point> *state = new State<Point>(pt, matrix[i][j],pointsToString);
             pair<Point, State<Point> *> p1(pt, state);
-            points.insert(p1);
+            points->insert(p1);
         }
     }
     return points;

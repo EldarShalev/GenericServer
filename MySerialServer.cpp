@@ -13,7 +13,7 @@ public:
 
 static void *connectionHandler(void *context) {
     my_thread_info info = *((my_thread_info *) context);
-    vector<string> vic;
+    vector<std::string> vic;
 
     //Accept and incoming connection
     puts("Waiting for incoming connections...");

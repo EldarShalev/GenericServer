@@ -37,7 +37,7 @@ public:
         string point_end = vic.at(vic.size() - 1);
         Point start = Utils::getPointFromString(point_start);
         Point end = Utils::getPointFromString(point_end);
-        vector<string> vic2(vic.begin(), vic.end() - 3);
+        vector<string> vic2(vic.begin(), vic.end() - 2);
         vector<vector<int>> intVector = Utils::vecStringToMatrix(vic2);
         Searchable<Point> *searchable = new SearchableMatrix(start, end, intVector);
         string matrix_problem, solution;
@@ -54,10 +54,10 @@ public:
 
 //            SearcherResult searcherResult1 = tester.testSearcher(searcher1, searchable);
 //            SearcherResult searcherResult2 = tester.testSearcher(searcher2, searchable);
-            SearcherResult searcherResult3 = tester.testSearcher(searcher3, searchable);
-//            SearcherResult searcherResult4 = tester.testSearcher(searcher4, searchable);
+//            SearcherResult searcherResult3 = tester.testSearcher(searcher3, searchable);
+            SearcherResult searcherResult4 = tester.testSearcher(searcher4, searchable);
 
-            solution = searcherResult3.path;
+            solution = searcherResult4.path;
             this->cacheManager->saveSolutionForProblem(matrix_problem, solution);
             // Delete allocated memory
             delete searcher1;

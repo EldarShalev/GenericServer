@@ -6,6 +6,7 @@
 #define SERVER_STATE_H
 
 #include <string>
+#include <cstring>
 
 using namespace std;
 

@@ -14,6 +14,7 @@ const char OS_Delimiter = '\n';
 using std::string;
 using std::stringstream;
 
+
 class my_thread_info {
 public:
     int serverSocket;
@@ -62,7 +63,6 @@ static void *connectionHandler(void *context) {
 
             }
         }
-
     }
 }
 
@@ -99,9 +99,9 @@ void MyParallelServer::open(int port, ClientHandler *handler) {
 
     //Accept and incoming connection
     cout << ("Waiting for incoming connections...") << endl;
-    int i = 0;
+    int indexOfThread = 0;
     pthread_t threadId[50];
-    while (1) {
+    while (indexOfThread < 1) {
         socklen_t addrlen = sizeof(sockaddr_in);
         int acceptConnection;
         if (acceptConnection = accept(serverDescriptor, (struct sockaddr *) &client, &addrlen)) {
@@ -113,14 +113,17 @@ void MyParallelServer::open(int port, ClientHandler *handler) {
         info.clientHandler = handler;
         info.clientSocket = acceptConnection;
 
-        int index = pthread_create(&threadId[i], NULL, connectionHandler, (void *) &info);
+        int index = pthread_create(&threadId[indexOfThread], NULL, connectionHandler, (void *) &info);
         if (index < 0) {
             perror("could not create thread");
             exit(EXIT_FAILURE);
         }
-        i++;
-        //pthread_join(threadId, NULL);
+        indexOfThread++;
     }
+    for (int j = 0; j < indexOfThread; j++) {
+        pthread_join(threadId[j], NULL);
+    }
+
 }
 
 void MyParallelServer::stop() {

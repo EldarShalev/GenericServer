@@ -20,10 +20,10 @@ protected:
     map<T, State<T> *> allStates;
 
 public:
-    Searchable(T initial, T goal, map<T, State<T> *> all) {
-        initialState = all[initial];
-        goalState = all[goal];
-        allStates = all;
+    Searchable(T initial, T goal, map<T, State<T> *> *all) {
+        initialState = (*all)[initial];
+        goalState = (*all)[goal];
+        allStates = (*all);
     }
 
     virtual State<T> *getInitialState() { return initialState; }
