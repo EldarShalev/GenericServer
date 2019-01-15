@@ -20,29 +20,32 @@ template<typename Problem, typename Solution>
 class FileCacheManager : public virtual CacheManager<Problem, Solution> {
 
 private:
-    map<Problem, Solution> problemToSolutions;
+    map<Problem, Solution> *problemToSolutions;
 public:
 
-    FileCacheManager() { loadFileToMap(); }
+    FileCacheManager() {
+        problemToSolutions = new map<Problem, Solution>;
+        loadFileToMap();
+    }
 
     bool isSolutionSavedInCache(Problem problem) {
-        return this->problemToSolutions.count(problem) > 0;
+        return this->problemToSolutions->count(problem) > 0;
     }
 
-    Solution getSolutionFromCache(Problem problem) { return this->problemToSolutions.at(problem); }
+    Solution getSolutionFromCache(Problem problem) { return this->problemToSolutions->at(problem); }
 
     void saveSolutionForProblem(Problem problem, Solution solution) {
-        problemToSolutions.insert(make_pair(problem, solution));
-        saveAlsoToFile(problem, solution);
+        problemToSolutions->insert(make_pair(problem, solution));
     }
 
-    void saveAlsoToFile(Problem problem, Solution solution) {
+    void saveAllToFile() {
         ofstream myfile;
         myfile.open("Solutions.txt", ios::app | fstream::out);
-        if (myfile.is_open()) {
-            myfile << problem << fileDelimiter << solution << "\n";
-            myfile.close();
+        for (typename map<Problem, Solution>::iterator it = problemToSolutions->begin();
+             it != problemToSolutions->end(); ++it) {
+            myfile << it->first << fileDelimiter << it->second << "\n";
         }
+        myfile.close();
     }
 
     void loadFileToMap() {
@@ -52,10 +55,15 @@ public:
         myfile.open("Solutions.txt");
         while (getline(myfile, line)) {
             parsing = Utils::splitToVectorByDelimiter(line, fileDelimiter);
-            problemToSolutions.insert(make_pair(parsing.at(0), parsing.at(1)));
+            problemToSolutions->insert(make_pair(parsing.at(0), parsing.at(1)));
         }
         myfile.close();
 
+    }
+
+    ~FileCacheManager() {
+        saveAllToFile();
+        delete problemToSolutions;
     }
 };
 

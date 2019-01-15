@@ -16,6 +16,8 @@ public:
     virtual Solution getSolutionFromCache(Problem problem) = 0;
 
     virtual void saveSolutionForProblem(Problem p, Solution s) = 0;
+
+     virtual ~CacheManager(){};
 };
 
 
