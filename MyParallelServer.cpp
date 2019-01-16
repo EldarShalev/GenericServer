@@ -79,11 +79,10 @@ void MyParallelServer::open(int port, ClientHandler *handler) {
 
     // Create timeout for incoming connection
     timeval timeout;
-    timeout.tv_sec = 5;
+    timeout.tv_sec = 2;
     timeout.tv_usec = 0;
 
     setsockopt(serverDescriptor, SOL_SOCKET, SO_RCVTIMEO, (char *) &timeout, sizeof(timeout));
-
 
     server.sin_family = AF_INET;
     server.sin_addr.s_addr = INADDR_ANY;
@@ -104,18 +103,32 @@ void MyParallelServer::open(int port, ClientHandler *handler) {
     int indexOfThread = 0;
     pthread_t threadId[50];
     int acceptConnection;
+    bool first_client = true;
     while (true) {
         socklen_t addrlen = sizeof(sockaddr_in);
-        acceptConnection = accept(serverDescriptor, (struct sockaddr *) &client, &addrlen);
-        if (acceptConnection < 0) {
-            if (errno == EWOULDBLOCK) {
-                cout << "timeout!" << endl;
-                break;
-            } else {
-                break;
+        // This is endless loop for first client, by design we wait infinity
+        if (first_client) {
+            while (true) {
+                acceptConnection = accept(serverDescriptor, (struct sockaddr *) &client, &addrlen);
+                if (acceptConnection < 0) {
+                    continue;
+                } else {
+                    first_client = false;
+                    break;
+                }
             }
-        } else {
-            cout << "Connection accepted, starting listener thread" << endl;
+        } else { // not first client, has timeout for connect
+            acceptConnection = accept(serverDescriptor, (struct sockaddr *) &client, &addrlen);
+            if (acceptConnection < 0) {
+                if (errno == EWOULDBLOCK) {
+                    cout << "timeout!" << endl;
+                    break;
+                } else {
+                    break;
+                }
+            } else {
+                cout << "Connection accepted, starting listener thread" << endl;
+            }
         }
 
         my_thread_info info;
